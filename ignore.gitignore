@@ -1,0 +1,7 @@
+# Ignora tudo dentro de node_modules
+node_modules/
+
+# Exceções: mantém essas pastas/arquivos
+!node_modules/express/
+!node_modules/mssql/
+!node_modules/cors/
