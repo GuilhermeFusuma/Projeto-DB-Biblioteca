@@ -9,9 +9,9 @@
     <form id="cadastroForm">
         <label for="email">Email</label>
         <input type="text" id="email" required>
-        <label for="nome">Nome</label>
+        <label for="nome">Nome Completo</label>
         <input type="text" id="nome" required>
-        <label for="Curso">Curso</label>
+        <label for="curso">Curso</label>
         <select id="curso">
             <option value="">Selecione o Curso</option>
             <option value="1">DevT</option>
@@ -24,7 +24,21 @@
             event.preventDefault();
 
             const cadastro = {
-                Nome_Completo:
+                Nome_Completo: document.getElementById('nome').value,
+                ID_Curso: document.getElementById('curso').value,
+                Email: document.getElementById('email').value
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/cadastro', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json' },
+                    body: JSON.stringify(cadastro)
+                });
+                const message = await response.text()
+                alert(message);
+            } catch (error) {
+                alert('Erro ao enviar dados: ' + error.message);
             }
         });
     </script>
