@@ -1,0 +1,75 @@
+*{
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+body {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    flex-flow: column;
+    background-color: black;
+    height: 100vh;
+}
+#fundo {
+    position: absolute;
+    z-index: -1;
+    height: 100vh;
+}
+.login {
+    width: 706px;
+    height: 345px;
+    background-color: rgba(255, 255, 255, 0.890);
+    border-radius: 30px;
+}
+form {
+    width: 690px;
+    height: 300px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: space-between;
+}
+#linha {
+    height: 1px;
+    width: 643px;
+    background-color: #FF2727;
+}
+#title {
+    background-color: rgba(255, 255, 255, 0.890);
+    height: 94px;
+    width: 706px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    border-radius: 30px;
+    color: #373737;
+}
+button {
+    background-color: red;
+    color: white;
+    height: 35px;
+    width: 135px;
+    border-radius: 20px;
+    padding: 7px;
+    font-size: 18px;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+a {
+    color: blue;
+}
+#logo {
+    width: 95vw;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: -20vh;
+}
+#logo img {
+    width: 200px;
+}

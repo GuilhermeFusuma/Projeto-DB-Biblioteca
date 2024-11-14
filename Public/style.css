@@ -1,0 +1,97 @@
+*{
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+body {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-flow: column;
+    background-color: black;
+    height: 100vh;
+}
+#fundo {
+    position: absolute;
+    z-index: -1;
+    height: 100vh;
+}
+.login {
+    margin-top: 100px;
+    height: 432px;
+    width: 702px;
+    background-color: #7d7d7d8f;
+    border-radius: 30px;
+    display: flex;
+    flex-flow: column;
+    gap: 40px;
+}
+.login img {
+    height: 35px;
+    width: 137px;
+    padding: 20px;
+}
+.login input {
+    height: 10px;
+    width: 530px;
+    background-color: #DEDEDE;
+    font-size: 18px;
+    border-radius: 78px;
+    padding: 15px;
+}
+#inputs {
+    display: flex;
+    width: 100%;
+    flex-flow: column;
+    align-items: center;
+    gap: 40px;
+}
+#inputs button {
+    background-color: red;
+    color: white;
+    height: 35px;
+    width: 135px;
+    border-radius: 20px;
+    padding: 7px;
+    font-size: 18px;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+h3 {
+    color: white;
+    text-align: center;
+    
+}
+.rodape {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 100px;
+}
+.rodape button {
+    background-color: red;
+    color: white;
+    height: 43px;
+    width: 200px;
+    border-radius: 20px;
+    padding: 7px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#space {
+    width: 200px;
+}
+#logo {
+    width: 200px;
+}
+h1 {
+    color: white;
+    font-size: 48px;
+}
+a {
+    text-decoration: none;
+}
