@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="presencaForm">
+        <label for="email">Email</label><br>
+        <input type="text" id="email" required placeholder="Email"><br><br>
+        <button type="submit">Marcar Presença</button>
+    </form>
+    <script>
+        document.getElementById('presencaForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const Email = {
+                Email: document.getElementById('email')
+            }
+            try {
+                const response = await fetch('http://localhost:3000/presenca', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json' },
+                    body: JSON.stringify(Email)
+                });
+                const message = await response.text();
+                alert(message);
+            } catch (error) {
+                alert('Erro ao verificar o email: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

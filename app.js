@@ -44,7 +44,7 @@ app.post('/livros', async (req, res) => {   // Código que será rodado quando d
 });
 
 app.post('/cadastro', async (req, res) => {
-    const {Nome_Completo, ID_Curso, qtd_Emprestimos, Email} = req.body;
+    const {Nome_Completo, ID_Curso, Email} = req.body;
 
     try {
         const query = "EXEC ADD_Aluno @Nome_Completo, @ID_Curso, @Email"
@@ -58,6 +58,49 @@ app.post('/cadastro', async (req, res) => {
         res.send('Usuário Adicionado com Sucesso!!');
     } catch (error) {
         res.status(500).send('Erro ao cadastrar: ' + error.message);
+    }
+});
+
+app.post('/presenca', async (req, res) => {
+    const {Email} = req.body;
+
+    try {
+        await sql.connect(dbConfig);
+        //Consulta que será feita para checar se o email está presente na tabela
+        const result = await sql.query` 
+        SELECT COUNT(*) AS Existe   
+        FROM Alunos
+        WHERE Email = ${Email}
+        `;
+        //Caso o email esteja na tabela
+        if (result.recordset[0].Existe > 0) {
+            //Consulta que consegue os IDs do aluno e do curso deste aluno
+            const alunoData = await sql.query`
+                SELECT ID_Aluno, ID_Curso
+                FROM Alunos
+                WHERE Email = ${Email}
+            `;
+        
+            if (alunoData.recordset.length > 0) {
+                //Salva os IDs para usar na query
+                const { ID_Aluno, ID_Curso } = alunoData.recordset[0];
+
+                // Inserção de dados na tabela Presenca
+                const query = "INSERT INTO Presenca(ID_Aluno, ID_Curso) VALUES (@ID_Aluno, @ID_Curso)";
+                const request = new sql.Request();
+                request.input('ID_Aluno', sql.Int, ID_Aluno);
+                request.input('ID_Curso', sql.Int, ID_Curso);
+
+                // Executa o INSERT
+                await request.query(query);
+
+                res.send('Presença registrada com sucesso!');
+            }
+        } else { // se o email não for encontrado
+            res.send('O Email não está cadastrado ou está incorreto!');
+        }
+    }   catch (error) {
+        res.status(500).send('Erro ao marcar presença: ' + error.message + ID_Aluno + ID_Curso);
     }
 });
 
