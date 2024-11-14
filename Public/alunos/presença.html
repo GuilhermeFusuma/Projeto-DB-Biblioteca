@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="presença.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="logo">
+        <img src="img/senai.png" alt="">
+    </div>
+    <img src="img/ULWr.gif" alt="" id="fundo">
+    <div id="title">
+        <div id="linha"></div>
+        <h1> Lista de presença Biblioteca </h1>
+        <div id="linha"></div>
+    </div>
+    <div class="login">
+        <form>
+            <div id="linha"></div>
+            <h1>E-mail</h1>
+            <input type="email" id="email">
+            <a href="http://localhost:3000/alunos/cadastro"> Caso não possua cadastro , clique aqui </a>
+            <button type="submit"> Enviar </button>
+            <div id="linha"></div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('presencaForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const Email = {
+                Email: document.getElementById('email')
+            }
+            try {
+                const response = await fetch('http://localhost:3000/presenca', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json' },
+                    body: JSON.stringify(Email)
+                });
+                const message = await response.text();
+                alert(message);
+            } catch (error) {
+                alert('Erro ao verificar o email: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
