@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar livros</title>
+</head>
+<body>
+    <form id="livroForm">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" required><br><br>
+        <label for="">Gênero</label>
+        <select name="generos" id="generos" required>
+            <option value="">Selecione o gênero</option>
+            <option value="1">Romance</option>
+        </select><br><br>
+        <label for="autores">Autor</label>
+        <select name="autores" id="autores" required>
+            <option value="">Selecione o autor</option>
+            <option value="1">ASSIS. Machado de</option>
+            <option value="1">PRINCIPE. Pequeno</option>
+        </select><br><br>
+        <label for="">Volume</label>
+        <input type="text" id="volume" required><br><br>
+        <label for="">Edição</label>
+        <input type="text" id="edicao" required>
+        <button type="submit">Registrar livro</button>
+    </form>
+
+    <script>
+        document.getElementById('livroForm').addEventListener('submit', async (event) => {  // função que roda sempre que o form for enviado
+            event.preventDefault(); // evita que a página seja reiniciada
+
+            const produto = {    // criação do objeto com os inputs do form
+                Titulo_livro: document.getElementById('titulo').value,
+                ID_Genero: document.getElementById('generos').value,
+                ID_Autor: document.getElementById('autores').value,
+                Volume: document.getElementById('volume').value,
+                Edição: document.getElementById('edicao').value
+            };
+  
+            try {
+                const response = await fetch('http://localhost:3000/livros', {   // direciona o objeto para o código da rota /livros
+                    method: 'POST', //specifica o metodo usado para enviar o objeto
+                    headers: {'Content-Type': 'application/json' },
+                    body: JSON.stringify(produto)   // objeto que será exportado para o app.js
+                });
+                const message = await response.text()
+                alert(message);
+            } catch (error) {
+                alert('Erro ao enviar dados: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
