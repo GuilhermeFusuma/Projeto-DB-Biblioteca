@@ -19,35 +19,59 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// Endpoint inicial (reserva para uso futuro)
 app.post('/', async (req, res) => {
-    
+    res.send('Endpoint inicial pronto para uso.');
 });
 
-app.post('/livros', async (req, res) => {   // Código que será rodado quando direcionado para /livros
-    const {Titulo_livro, ID_Genero, ID_Autor, Volume, Edição} = req.body;   // objeto importado do body
+// Endpoint para adicionar livros
+app.post('/livros', async (req, res) => {
+    const { Titulo_livro, ID_Genero, ID_Autor, Volume, Edicao } = req.body;
+
+    // Validação dos parâmetros
+    if (!Titulo_livro || !ID_Genero || !ID_Autor || !Volume || !Edicao) {
+        return res.status(400).send('Todos os campos são obrigatórios.');
+    }
+    if (typeof Volume !== 'string' || Volume.length > 2) {
+        return res.status(400).send('Volume deve ser uma string com no máximo 2 caracteres.');
+    }
+    if (typeof Edicao !== 'string' || Edicao.length > 4) {
+        return res.status(400).send('Edição deve ser uma string com no máximo 4 caracteres.');
+    }
 
     try {
         await sql.connect(dbConfig);
-        const query = "INSERT INTO Titulos(Titulo_livro, ID_Genero, ID_Autor, Volume, Edição) VALUES (@Titulo_livro, @ID_Genero, @ID_Autor, @Volume, @Edição)"; // consulta que será realizada no SQL Server
-        const request = new sql.Request();  // define as variáveis da consulta
+        const query = `
+            INSERT INTO Titulos (Titulo_livro, ID_Genero, ID_Autor, Volume, Edicao)
+            VALUES (@Titulo_livro, @ID_Genero, @ID_Autor, @Volume, @Edicao)
+        `;
+        const request = new sql.Request();
         request.input('Titulo_livro', sql.NVarChar, Titulo_livro);
         request.input('ID_Genero', sql.Int, ID_Genero);
         request.input('ID_Autor', sql.Int, ID_Autor);
         request.input('Volume', sql.VarChar(2), Volume);
-        request.input('Edição', sql.VarChar(4), Edição);
-        await request.query(query); // realiza a consulta
-        
-        res.send('Livro Adicionado com sucesso!');  // envia uma notificação para a página do usuário
+        request.input('Edicao', sql.VarChar(4), Edicao);
+        await request.query(query);
+
+        res.send('Livro adicionado com sucesso!');
     } catch (error) {
-        res.status(500).send('Erro ao adicionar produto: ' + error.message);
+        console.error('Erro ao adicionar livro:', error);
+        res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
+    } finally {
+        await sql.close();
     }
 });
 
+// Endpoint para cadastro de alunos
 app.post('/cadastro', async (req, res) => {
-    const {Nome_Completo, ID_Curso, Email} = req.body;
+    const { Nome_Completo, ID_Curso, Email } = req.body;
+
+    if (!Nome_Completo || !ID_Curso || !Email) {
+        return res.status(400).send('Todos os campos são obrigatórios.');
+    }
 
     try {
-        const query = "EXEC ADD_Aluno @Nome_Completo, @ID_Curso, @Email"
+        const query = "EXEC ADD_Aluno @Nome_Completo, @ID_Curso, @Email";
         await sql.connect(dbConfig);
         const request = new sql.Request();
         request.input('Nome_Completo', sql.VarChar(100), Nome_Completo);
@@ -55,55 +79,60 @@ app.post('/cadastro', async (req, res) => {
         request.input('Email', sql.VarChar(100), Email);
         await request.query(query);
 
-        res.send('Usuário Adicionado com Sucesso!!');
+        res.send('Usuário cadastrado com sucesso!');
     } catch (error) {
-        res.status(500).send('Erro ao cadastrar: ' + error.message);
+        console.error('Erro ao cadastrar aluno:', error);
+        res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
+    } finally {
+        await sql.close();
     }
 });
 
+// Endpoint para registrar presença
 app.post('/presenca', async (req, res) => {
-    const {Email} = req.body;
+    const { Email } = req.body;
+
+    if (!Email || typeof Email !== 'string' || Email.trim() === '') {
+        console.log(Email);
+        return res.status(400).send('Email inválido ou não fornecido.');
+    }
 
     try {
         await sql.connect(dbConfig);
-        //Consulta que será feita para checar se o email está presente na tabela
-        const result = await sql.query` 
-        SELECT COUNT(*) AS Existe   
-        FROM Alunos
-        WHERE Email = ${Email}
+
+        // Consulta para buscar informações do aluno
+        const alunoQuery = `
+            SELECT ID_Aluno, ID_Curso
+            FROM Alunos
+            WHERE Email = @Email
         `;
-        //Caso o email esteja na tabela
-        if (result.recordset[0].Existe > 0) {
-            //Consulta que consegue os IDs do aluno e do curso deste aluno
-            const alunoData = await sql.query`
-                SELECT ID_Aluno, ID_Curso
-                FROM Alunos
-                WHERE Email = ${Email}
-            `;
-        
-            if (alunoData.recordset.length > 0) {
-                //Salva os IDs para usar na query
-                const { ID_Aluno, ID_Curso } = alunoData.recordset[0];
+        const alunoRequest = new sql.Request();
+        alunoRequest.input('Email', sql.VarChar(100), Email);
+        const alunoData = await alunoRequest.query(alunoQuery);
 
-                // Inserção de dados na tabela Presenca
-                const query = "INSERT INTO Presenca(ID_Aluno, ID_Curso) VALUES (@ID_Aluno, @ID_Curso)";
-                const request = new sql.Request();
-                request.input('ID_Aluno', sql.Int, ID_Aluno);
-                request.input('ID_Curso', sql.Int, ID_Curso);
-
-                // Executa o INSERT
-                await request.query(query);
-
-                res.send('Presença registrada com sucesso!');
-            }
-        } else { // se o email não for encontrado
-            res.send('O Email não está cadastrado ou está incorreto!');
+        if (alunoData.recordset.length === 0) {
+            return res.status(404).send('Email não encontrado no cadastro.');
         }
-    }   catch (error) {
-        res.status(500).send('Erro ao marcar presença: ' + error.message + ID_Aluno + ID_Curso);
+
+        const { ID_Aluno, ID_Curso } = alunoData.recordset[0];
+
+        // Inserir registro de presença
+        const query = "INSERT INTO Presenca (ID_Aluno, ID_Curso) VALUES (@ID_Aluno, @ID_Curso)";
+        const request = new sql.Request();
+        request.input('ID_Aluno', sql.Int, ID_Aluno);
+        request.input('ID_Curso', sql.Int, ID_Curso);
+        await request.query(query);
+
+        res.send('Presença registrada com sucesso!');
+    } catch (error) {
+        console.error('Erro ao registrar presença:', error);
+        res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
+    } finally {
+        await sql.close();
     }
 });
 
-app.listen(port, () => { //roda sempre que o código for executado no node.js
+// Inicialização do servidor
+app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });

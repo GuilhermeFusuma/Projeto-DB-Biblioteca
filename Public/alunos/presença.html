@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="presença.css">
-    <title>Document</title>
+    <title>Marcar Presença</title>
 </head>
 <body>
     <div id="logo">
@@ -32,7 +32,7 @@
             event.preventDefault();
 
             const Email = {
-                Email: document.getElementById('email')
+                Email: document.getElementById('email').value
             }
             try {
                 const response = await fetch('http://localhost:3000/presenca', {
