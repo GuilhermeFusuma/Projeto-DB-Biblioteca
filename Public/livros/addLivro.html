@@ -4,27 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar livros</title>
+    <link rel="stylesheet" href="addLivro.css">
 </head>
 <body>
-    <form id="livroForm">
-        <label for="titulo">Título</label>
-        <input type="text" id="titulo" required><br><br>
-        <label for="">Gênero</label>
-        <select name="generos" id="generos" required>
-            <option value="">Selecione o gênero</option>
-            <option value="1">Romance</option>
-        </select><br><br>
-        <label for="autores">Autor</label>
-        <select name="autores" id="autores" required>
-            <option value="">Selecione o autor</option>
-            <option value="1">ASSIS. Machado de</option>
-        </select><br><br>
-        <label for="">Volume</label>
-        <input type="text" id="volume" required><br><br>
-        <label for="">Edição</label>
-        <input type="text" id="edicao" required>
-        <button type="submit">Registrar livro</button>
-    </form>
+    <header>
+        <img src="senai.png" alt="">
+    </header>
+    <div class="le">
+        <a href=""><h1>Livros</h1></a>
+        <a href=""><h1>Empréstimos</h1></a>
+        <a href=""><h1>Presença</h1></a>
+    </div>
+    <main>
+        <div class="sombra"></div>
+        <form id="livroForm">
+            <label for="titulo">Título</label>
+            <input type="text" id="titulo" required><br><br>
+            <label for="">Gênero</label>
+            <select name="generos" id="generos" required>
+                <option value="">Selecione o gênero</option>
+                <option value="1">Romance</option>
+            </select><br><br>
+            <label for="autores">Autor</label>
+            <select name="autores" id="autores" required>
+                <option value="">Selecione o autor</option>
+                <option value="1">ASSIS. Machado de</option>
+            </select><br><br>
+            <label for="">Volume</label>
+            <input type="text" id="volume" required><br><br>
+            <label for="">Edição</label>
+            <input type="text" id="edicao" required>
+            <button type="submit">Registrar livro</button>
+        </form>
+    </main>
 
     <script>
         document.getElementById('livroForm').addEventListener('submit', async (event) => {  // função que roda sempre que o form for enviado
