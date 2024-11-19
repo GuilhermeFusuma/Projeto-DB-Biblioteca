@@ -16,26 +16,24 @@
         <a href=""><h1>Presença</h1></a>
     </div>
     <main>
-        <div class="sombra"></div>
         <form id="livroForm">
-            <label for="titulo">Título</label>
-            <input type="text" id="titulo" required><br><br>
-            <label for="">Gênero</label>
+            <h1>Adicionar Livro</h1>
+            <br><br>
+            <input type="text" placeholder="Título" id="titulo" required><br><br>
             <select name="generos" id="generos" required>
                 <option value="">Selecione o gênero</option>
                 <option value="1">Romance</option>
             </select><br><br>
-            <label for="autores">Autor</label>
             <select name="autores" id="autores" required>
                 <option value="">Selecione o autor</option>
                 <option value="1">ASSIS. Machado de</option>
             </select><br><br>
-            <label for="">Volume</label>
-            <input type="text" id="volume" required><br><br>
-            <label for="">Edição</label>
-            <input type="text" id="edicao" required>
+            <input type="text" placeholder="Volume" id="volume" required><br><br>
+            <input type="text" placeholder="Edição" id="edicao" required>
+            <br><br>
             <button type="submit">Registrar livro</button>
         </form>
+        <div class="sombra"></div>
     </main>
 
     <script>
