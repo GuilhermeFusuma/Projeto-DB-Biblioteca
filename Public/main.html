@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+</head>
+<body>
+    <h1>Teste</h1>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                fetch('http://localhost:3000/mostrarLivros')
+                    .then(response => response.json())
+                    .then(livros => montarLivros(livros))
+                    .catch(error => {
+                        alert('Erro em mostrar os livros: ' + error.message);
+                    });
+            } catch (error) {
+                alert('Erro em mostrar os livros: ' + error.message);
+            }
+
+            function montarLivros(livros) {
+                console.log(livros);  // Verifique o que está sendo retornado
+                if (Array.isArray(livros)) {  // Verifica se é realmente um array
+                    const listaLivros = document.createElement('ul');  // Cria uma lista não ordenada
+                    listaLivros.style = 'border: 1px solid black;'
+                    
+                    livros.forEach(livro => {
+                        const itemLivro = document.createElement('li');  // Cria um item de lista para cada livro
+                        itemLivro.textContent = livro.Titulo_livro;  // Exibe o título do livro
+                        listaLivros.appendChild(itemLivro);  // Adiciona o item à lista
+                    });
+
+                    // Adiciona a lista de livros ao body da página
+                    document.body.appendChild(listaLivros);
+                } else {
+                    console.error('O retorno não é um array:', livros);
+                    alert('Erro ao processar os livros. O formato retornado não é esperado.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
