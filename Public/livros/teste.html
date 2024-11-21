@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autocompletar com Node.js e MSSQL</title>
+  <style>
+    /* Estilos adicionais podem ser aplicados para personalizar a aparência, se necessário */
+  </style>
+</head>
+<body>
+  <div>
+    <label for="searchInput">Pesquisar:</label>
+    <input type="text" id="searchInput" list="suggestions" placeholder="Digite para buscar..." />
+    <datalist id="suggestions">Teste</datalist> <!-- Datalist para sugestões -->
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsList = document.getElementById('suggestions');
+
+    // Função para buscar e exibir as sugestões
+    searchInput.addEventListener('input', async function() {
+      const searchTerm = searchInput.value.trim();
+
+      if (searchTerm.length > 0) {
+        // Fazer uma requisição POST para buscar as sugestões
+        const response = await fetch('http://localhost:3000/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ searchTerm }),
+        });
+
+        const suggestions = await response.json();
+
+        // Limpar as sugestões anteriores
+        suggestionsList.innerHTML = '';
+
+        if (suggestions.length > 0) {
+          // Adicionar as novas sugestões ao datalist
+          suggestions.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.nome;  // A opção de autocomplete será o "nome" retornado
+            suggestionsList.appendChild(option);
+          });
+        }
+      } else {
+        // Limpar as sugestões se o campo estiver vazio
+        suggestionsList.innerHTML = '';
+      }
+    });
+  </script>
+</body>
+</html>

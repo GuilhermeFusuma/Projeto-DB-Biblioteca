@@ -26,10 +26,10 @@ app.post('/', async (req, res) => {
 
 // Endpoint para adicionar livros
 app.post('/livros', async (req, res) => {
-    const { Titulo_livro, ID_Genero, ID_Autor, Volume, Edicao } = req.body;
+    const { Titulo_livro, Autor, Volume, Edicao, Nome, Data_Registro } = req.body;
 
     // Validação dos parâmetros
-    if (!Titulo_livro || !ID_Genero || !ID_Autor || !Volume || !Edicao) {
+    if (!Titulo_livro || !Autor || !Nome || !Volume || !Edicao || !Data_Registro) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
     if (typeof Volume !== 'string' || Volume.length > 2) {
@@ -41,25 +41,71 @@ app.post('/livros', async (req, res) => {
 
     try {
         await sql.connect(dbConfig);
-        const query = `
-            INSERT INTO Titulos (Titulo_livro, ID_Genero, ID_Autor, Volume, Edicao)
-            VALUES (@Titulo_livro, @ID_Genero, @ID_Autor, @Volume, @Edicao)
-        `;
-        const request = new sql.Request();
-        request.input('Titulo_livro', sql.NVarChar, Titulo_livro);
-        request.input('ID_Genero', sql.Int, ID_Genero);
-        request.input('ID_Autor', sql.Int, ID_Autor);
-        request.input('Volume', sql.VarChar(2), Volume);
-        request.input('Edicao', sql.VarChar(4), Edicao);
-        await request.query(query);
 
-        res.send('Livro adicionado com sucesso!');
+        // Consulta para obter o ID da subcategoria
+        const querySubcategoria = `
+            SELECT ID_Subcategoria
+            FROM Subcategorias
+            WHERE Nome = @Nome
+        `;
+        const requestSubcategoria = new sql.Request();
+        requestSubcategoria.input('Nome', sql.NVarChar, Nome); //salva o nome da subcategoria para realizar a consulta
+        const ID_SubCategoria = await requestSubcategoria.query(querySubcategoria);
+
+        if (ID_SubCategoria.recordset.length > 0) {
+            const ID_SubCategoriaValue = ID_SubCategoria.recordset[0].ID_Subcategoria;
+
+            // Inserir o livro
+            const query = `
+                INSERT INTO Titulos (Titulo_livro, Autor, Volume, Edicao, ID_SubCategoria, Data_Registro)
+                VALUES (@Titulo_livro, Autor, @Volume, @Edicao, @ID_SubCategoria, @Data_Registro)
+            `;
+            const request = new sql.Request();
+            request.input('Titulo_livro', sql.NVarChar, Titulo_livro);
+            request.input('Autor', sql.NVarChar, Autor)
+            request.input('Volume', sql.VarChar(2), Volume);
+            request.input('Edicao', sql.VarChar(4), Edicao);
+            request.input('Data_Registro', sql.Date, Data_Registro);
+            request.input('ID_SubCategoria', sql.Int, ID_SubCategoriaValue);
+            await request.query(query);
+
+            res.send('Livro adicionado com sucesso!');
+        } else {
+            res.status(400).send('O nome da subcategoria não foi encontrado.');
+        }
     } catch (error) {
         console.error('Erro ao adicionar livro:', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
-    } finally {
-        await sql.close();
     }
+});
+
+// Endpoint para procurar subcategorias
+app.post('/subcategorias', async (req, res) => {
+    const {searchTerm, categoria} = req.body;
+
+    try {
+        // Conectar ao banco de dados
+        await sql.connect(dbConfig);
+
+        const query = `
+        SELECT Nome
+        FROM Subcategorias
+        WHERE Nome LIKE @searchTerm AND ID_Categoria = @ID_Categoria
+        `;
+        const request = new sql.Request();
+        request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
+        request.input('ID_Categoria', sql.Int, categoria);
+        const result = await request.query(query);
+    
+        // Retornar os resultados encontrados
+        res.json(result.recordset); 
+      } catch (err) {
+        console.error('Erro na consulta ao banco de dados:', err);
+        res.status(500).send('Erro no servidor');
+      } finally {
+        // Fechar a conexão com o banco
+        await sql.close();
+      }
 });
 
 // Endpoint para cadastro de alunos

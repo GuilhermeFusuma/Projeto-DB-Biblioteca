@@ -20,46 +20,93 @@
             <h1>Adicionar Livro</h1>
             <br><br>
             <input type="text" placeholder="Título" id="titulo" required><br><br>
-            <select name="generos" id="generos" required>
-                <option value="">Selecione o gênero</option>
-                <option value="1">Romance</option>
-            </select><br><br>
-            <select name="autores" id="autores" required>
-                <option value="">Selecione o autor</option>
-                <option value="1">ASSIS. Machado de</option>
-            </select><br><br>
+            <input type="text" placeholder="Autor" id="autor" required><br><br>
             <input type="text" placeholder="Volume" id="volume" required><br><br>
-            <input type="text" placeholder="Edição" id="edicao" required>
-            <br><br>
+            <input type="text" placeholder="Edição" id="edicao" required><br><br>
+            <select name="" id="categorias">
+                <option value="">Selecione a Categoria</option>
+                <option value="1">Ficção</option>
+                <option value="2">Não-Ficção</option>
+                <option value="3">Ciência</option>
+                <option value="4">História</option>
+                <option value="5">Tecnologia</option>
+                <option value="6">Artes</option>
+                <option value="7">Literatura</option>
+                <option value="8">Filosofia</option>
+                <option value="9">Culinária</option>
+                <option value="10">Psicologia</option>
+                <option value="12">Economia</option>
+                <option value="13">Política</option>
+                <option value="14">Educação</option>
+                <option value="15">Saúde</option>
+                <option value="16">Viagens</option>
+            </select>
+            <input type="text" id="subCategoria" list="sugestoes" placeholder="Digite para buscar...">
+            <datalist id="sugestoes"></datalist>
             <button type="submit">Registrar livro</button>
         </form>
         <div class="sombra"></div>
     </main>
 
     <script>
-        document.getElementById('livroForm').addEventListener('submit', async (event) => {  // função que roda sempre que o form for enviado
-            event.preventDefault(); // evita que a página seja reiniciada
+        document.getElementById('subCategoria').addEventListener('input', async () => {
+            const searchTerm = document.getElementById('subCategoria').value;
+            const categoria = document.getElementById('categorias').value;
+            const sugestoesLista = document.getElementById('sugestoes');
+    
+            if (searchTerm.length > 0 && categoria) {
+                try {
+                    const response = await fetch('http://localhost:3000/subcategorias', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'}, // Correção no nome do cabeçalho
+                        body: JSON.stringify({ searchTerm, categoria }) // Envio de dados correto
+                    });
+    
+                    const sCategorias = await response.json();
+                    
+                    // Limpar o datalist antes de adicionar novas opções
+                    sugestoesLista.innerHTML = '';
+    
+                    if (sCategorias.length > 0) {
+                        sCategorias.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.Nome; // Acessar o campo correto retornado pelo backend
+                            sugestoesLista.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar subcategorias:', error);
+                }
+            } else {
+                sugestoesLista.innerHTML = ''; // Limpar se o campo estiver vazio
+            }
+        });
 
-            const produto = {    // criação do objeto com os inputs do form
+        document.getElementById('livroForm').addEventListener('submit', async (event) => {  
+            event.preventDefault();
+    
+            const produto = {    
                 Titulo_livro: document.getElementById('titulo').value,
-                ID_Genero: document.getElementById('generos').value,
-                ID_Autor: document.getElementById('autores').value,
+                Autor: document.getElementById('autor').value,
                 Volume: document.getElementById('volume').value,
-                Edição: document.getElementById('edicao').value
+                Edição: document.getElementById('edicao').value,
+                Nome: document.getElementById('subCategoria').value  // ID correto
             };
-  
+      
             try {
-                const response = await fetch('http://localhost:3000/livros', {   // direciona o objeto para o código da rota /livros
-                    method: 'POST', //specifica o metodo usado para enviar o objeto
-                    headers: {'Content-Type': 'application/json' },
-                    body: JSON.stringify(produto)   // objeto que será exportado para o app.js
+                const response = await fetch('http://localhost:3000/livros', {   
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}, // Correção no nome do cabeçalho
+                    body: JSON.stringify(produto)
                 });
-                const message = await response.text()
+                const message = await response.text();
                 alert(message);
             } catch (error) {
                 alert('Erro ao enviar dados: ' + error.message);
             }
         });
+
+
     </script>
 </body>
 </html>
