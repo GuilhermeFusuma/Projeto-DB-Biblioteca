@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar livros</title>
+    <link rel="stylesheet" href="addEmprestimo.css">
+</head>
+<body>
+    <header>
+        <img src="senai.png" alt="">
+    </header>
+    <div class="le">
+        <a href=""><h1>Livros</h1></a>
+        <a href=""><h1>Empréstimos</h1></a>
+        <a href=""><h1>Presença</h1></a>
+    </div>
+    <main>
+        <form id="livroForm">
+            <h1>Adicionar Empréstimo</h1>
+            <br><br>
+            <input type="text" placeholder="ID_Exemplar" id="ID_Exemplar" required><br><br>
+            <input type="text" placeholder="Aluno" id="" required><br><br>
+            <div id="between">
+                <div id="date">
+                    <label for="Data_de_Emprestimo"> Data de Empréstimo: </label>
+                    <input type="date" placeholder="" id="Data_de_Emprestimo" required>
+                </div>
+                <div id="date">
+                    <label for="Data_de_Devolucao"> Data de Devolução: </label>
+                    <input type="date" placeholder="" id="Data_de_Devolucao" required>
+                </div>
+            </div>
+            <button type="submit">Registrar Empréstimo</button>
+        </form>
+        <div class="sombra"></div>
+    </main>
+
+    <script>
+        document.getElementById('livroForm').addEventListener('submit', async (event) => {  // função que roda sempre que o form for enviado
+            event.preventDefault(); // evita que a página seja reiniciada
+
+            const produto = {    // criação do objeto com os inputs do form
+                Titulo_livro: document.getElementById('titulo').value,
+                ID_Genero: document.getElementById('generos').value,
+                ID_Autor: document.getElementById('autores').value,
+                Volume: document.getElementById('volume').value,
+                Edição: document.getElementById('edicao').value
+            };
+  
+            try {
+                const response = await fetch('http://localhost:3000/livros', {   // direciona o objeto para o código da rota /livros
+                    method: 'POST', //specifica o metodo usado para enviar o objeto
+                    headers: {'Content-Type': 'application/json' },
+                    body: JSON.stringify(produto)   // objeto que será exportado para o app.js
+                });
+                const message = await response.text()
+                alert(message);
+            } catch (error) {
+                alert('Erro ao enviar dados: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
