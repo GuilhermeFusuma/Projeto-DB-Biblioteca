@@ -127,7 +127,7 @@ app.post('/cadastro', async (req, res) => {
     }
 
     try {
-        const query = "EXEC ADD_Aluno @Nome_Completo, @ID_Curso, @Email";
+        const query = "EXEC ADD_Alunos @Email, @Nome_Completo, @ID_Curso";
         await sql.connect(dbConfig);
         const request = new sql.Request();
         request.input('Nome_Completo', sql.VarChar(100), Nome_Completo);
