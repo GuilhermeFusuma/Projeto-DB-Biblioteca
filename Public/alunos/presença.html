@@ -8,24 +8,31 @@
 </head>
 <body>
     <div id="logo">
-        <img src="img/senai.png" alt="">
+        <img src="image 5.png" alt="">
     </div>
-    <img src="img/ULWr.gif" alt="" id="fundo">
+    <img src="image 6.png" alt="" id="fundo">
     <div id="title">
         <div id="linha"></div>
-        <h1> Lista de presença Biblioteca </h1>
+         <h1>Lista de presença Biblioteca </h1>
         <div id="linha"></div>
     </div>
     <div class="login">
         <form id="presencaForm">
             <div id="linha"></div>
-            <h1>E-mail</h1>
-            <input type="email" id="email">
+            <legend><strong>E-mail</strong>
+            <div id="linha_do_email"></div></legend>
+            <div class="espaço_do_email">
+            <input type="email" id="email" placeholder="digite aqui" required="yes">
+            <div id="linha_do_input_email"></div>
+        </div>
             <a href="http://localhost:3000/alunos/cadastro.html"> Caso não possua cadastro , clique aqui </a>
-            <button type="submit"> Marcar presença </button>
+
+            <button type="submit" value="" maxlenght="60" required="yes"> Marcar presença </button>
+
             <div id="linha"></div>
         </form>
     </div>
+   
 
     <script>
         document.getElementById('presencaForm').addEventListener('submit', async (event) => {
