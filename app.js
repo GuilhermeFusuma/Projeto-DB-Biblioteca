@@ -155,28 +155,10 @@ app.post('/presenca', async (req, res) => {
 
     try {
         await sql.connect(dbConfig);
-
-        // Consulta para buscar informações do aluno
-        const alunoQuery = `
-            SELECT ID_Aluno, ID_Curso
-            FROM Alunos
-            WHERE Email = @Email
-        `;
-        const alunoRequest = new sql.Request();
-        alunoRequest.input('Email', sql.VarChar(100), Email);
-        const alunoData = await alunoRequest.query(alunoQuery);
-
-        if (alunoData.recordset.length === 0) {
-            return res.status(404).send('Email não encontrado no cadastro.');
-        }
-
-        const { ID_Aluno, ID_Curso } = alunoData.recordset[0];
-
         // Inserir registro de presença
-        const query = "INSERT INTO Presenca (ID_Aluno, ID_Curso) VALUES (@ID_Aluno, @ID_Curso)";
+        const query = "INSERT INTO Presencas (Email) VALUES (@Email)";
         const request = new sql.Request();
-        request.input('ID_Aluno', sql.Int, ID_Aluno);
-        request.input('ID_Curso', sql.Int, ID_Curso);
+        request.input('Email', sql.VarChar(255), Email);
         await request.query(query);
 
         res.send('Presença registrada com sucesso!');
