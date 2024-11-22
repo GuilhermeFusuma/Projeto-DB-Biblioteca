@@ -19,31 +19,33 @@
         <form id="livroForm">
             <h1>Adicionar Livro</h1>
             <br><br>
-            <input type="text" placeholder="Título" id="titulo" required><br><br>
-            <input type="text" placeholder="Autor" id="autor" required><br><br>
-            <input type="text" placeholder="Volume" id="volume" required><br><br>
-            <input type="text" placeholder="Edição" id="edicao" required><br><br>
-            <select name="" id="categorias">
-                <option value="">Selecione a Categoria</option>
-                <option value="1">Ficção</option>
-                <option value="2">Não-Ficção</option>
-                <option value="3">Ciência</option>
-                <option value="4">História</option>
-                <option value="5">Tecnologia</option>
-                <option value="6">Artes</option>
-                <option value="7">Literatura</option>
-                <option value="8">Filosofia</option>
-                <option value="9">Culinária</option>
-                <option value="10">Psicologia</option>
-                <option value="12">Economia</option>
-                <option value="13">Política</option>
-                <option value="14">Educação</option>
-                <option value="15">Saúde</option>
-                <option value="16">Viagens</option>
-            </select>
-            <input type="text" id="subCategoria" list="sugestoes" placeholder="Digite para buscar...">
-            <datalist id="sugestoes"></datalist>
-            <button type="submit">Registrar livro</button>
+            <div id="formGrid">
+                <input type="text" placeholder="Título" id="titulo" required><br><br>
+                <input type="text" placeholder="Autor" id="autor" required><br><br>
+                <input type="text" placeholder="Volume" id="volume" required><br><br>
+                <input type="text" placeholder="Edição" id="edicao" required><br><br>
+                <select name="" id="categorias">
+                    <option value="">Selecione a Categoria</option>
+                    <option value="1">Ficção</option>
+                    <option value="2">Não-Ficção</option>
+                    <option value="3">Ciência</option>
+                    <option value="4">História</option>
+                    <option value="5">Tecnologia</option>
+                    <option value="6">Artes</option>
+                    <option value="7">Literatura</option>
+                    <option value="8">Filosofia</option>
+                    <option value="9">Culinária</option>
+                    <option value="10">Psicologia</option>
+                    <option value="12">Economia</option>
+                    <option value="13">Política</option>
+                    <option value="14">Educação</option>
+                    <option value="15">Saúde</option>
+                    <option value="16">Viagens</option>
+                </select>
+                <input type="text" id="subCategoria" list="sugestoes" placeholder="Subcategoria">
+                <datalist id="sugestoes"></datalist>
+                <button type="submit">Registrar livro</button>
+            </div>
         </form>
         <div class="sombra"></div>
     </main>

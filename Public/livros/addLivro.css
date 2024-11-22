@@ -15,9 +15,37 @@ form {
     border: 1px solid black;
     background-color: #DADADA;
     z-index: 1000;
-    display: flex;
-    flex-flow: column;
-    align-items: center;
+}
+#formGrid {
+    display: grid;
+    grid-template-columns: 3fr 3fr 1fr 3fr;
+    row-gap: 20px;
+}
+#titulo {
+    grid-column: span 2;
+}
+#autor {
+    grid-column: span 2;
+}
+#volume {
+    grid-column-start: 4;
+    grid-column-end: 6;
+    grid-row-start: 1;
+}
+#edicao {
+    grid-column-start: 4;
+    grid-column-end: 6;
+    grid-row-start: 2;
+}
+#categorias {
+    grid-row-start: 3;
+    grid-column-start: 1;
+}
+#subCategoria {
+    grid-row-start: 3;
+    grid-column-start: 2;
+    width: 60%;
+    justify-self: end;
 }
 form button {
     background-color: red;
@@ -31,14 +59,12 @@ form button {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-form label {
-    font-size: 18px;
-    color: black;
+    grid-row-start: 4;
+    grid-column: span 5;
+    justify-self: end;
 }
 form input {
     font-size: 20px;
-    width: 80%;
     padding: 8px 8px 8px 15px;
     border-radius: 20px;
     color: #646464;
@@ -47,7 +73,6 @@ form input {
 }
 form select {
     font-size: 20px;
-    width: 82%;
     padding: 8px 8px 8px 15px;
     border-radius: 20px;
     color: #646464;
@@ -101,5 +126,6 @@ a {
     background-color: rgba(0, 0, 0, 0.37);   
 }
 #livroForm {
+    min-width: fit-content;
     width: 60vw;
 }
