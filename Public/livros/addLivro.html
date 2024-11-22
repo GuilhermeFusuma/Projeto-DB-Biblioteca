@@ -52,9 +52,10 @@
         document.getElementById('subCategoria').addEventListener('input', async () => {
             const searchTerm = document.getElementById('subCategoria').value;
             const categoria = document.getElementById('categorias').value;
-            const sugestoesLista = document.getElementById('sugestoes');
-    
-            if (searchTerm.length > 0 && categoria) {
+            
+            if (searchTerm.length > 0) {
+                const sugestoesLista = document.getElementById('sugestoes');
+
                 try {
                     const response = await fetch('http://localhost:3000/subcategorias', {
                         method: 'POST',
@@ -63,7 +64,6 @@
                     });
     
                     const sCategorias = await response.json();
-                    
                     // Limpar o datalist antes de adicionar novas opções
                     sugestoesLista.innerHTML = '';
     
@@ -75,7 +75,7 @@
                         });
                     }
                 } catch (error) {
-                    console.error('Erro ao buscar subcategorias:', error);
+                    console.error('Erro ao buscar subcategorias:', error.message);
                 }
             } else {
                 sugestoesLista.innerHTML = ''; // Limpar se o campo estiver vazio
@@ -89,7 +89,7 @@
                 Titulo_livro: document.getElementById('titulo').value,
                 Autor: document.getElementById('autor').value,
                 Volume: document.getElementById('volume').value,
-                Edição: document.getElementById('edicao').value,
+                Edicao: document.getElementById('edicao').value,
                 Nome: document.getElementById('subCategoria').value  // ID correto
             };
       

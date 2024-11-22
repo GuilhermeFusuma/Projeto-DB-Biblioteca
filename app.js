@@ -19,17 +19,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// Endpoint inicial (reserva para uso futuro)
-app.post('/', async (req, res) => {
-    res.send('Endpoint inicial pronto para uso.');
-});
-
 // Endpoint para adicionar livros
 app.post('/livros', async (req, res) => {
-    const { Titulo_livro, Autor, Volume, Edicao, Nome, Data_Registro } = req.body;
+    const { Titulo_livro, Autor, Volume, Edicao, Nome} = req.body;
 
     // Validação dos parâmetros
-    if (!Titulo_livro || !Autor || !Nome || !Volume || !Edicao || !Data_Registro) {
+    if (!Titulo_livro || !Autor || !Nome || !Volume || !Edicao) {
+        console.log(Titulo_livro, Autor, Nome, Volume, Edicao)
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
     if (typeof Volume !== 'string' || Volume.length > 2) {
@@ -57,15 +53,14 @@ app.post('/livros', async (req, res) => {
 
             // Inserir o livro
             const query = `
-                INSERT INTO Titulos (Titulo_livro, Autor, Volume, Edicao, ID_SubCategoria, Data_Registro)
-                VALUES (@Titulo_livro, Autor, @Volume, @Edicao, @ID_SubCategoria, @Data_Registro)
+                INSERT INTO Titulos (Titulo_livro, Autor, Volume, Edicao, ID_SubCategoria)
+                VALUES (@Titulo_livro, @Autor, @Volume, @Edicao, @ID_SubCategoria)
             `;
             const request = new sql.Request();
             request.input('Titulo_livro', sql.NVarChar, Titulo_livro);
             request.input('Autor', sql.NVarChar, Autor)
             request.input('Volume', sql.VarChar(2), Volume);
             request.input('Edicao', sql.VarChar(4), Edicao);
-            request.input('Data_Registro', sql.Date, Data_Registro);
             request.input('ID_SubCategoria', sql.Int, ID_SubCategoriaValue);
             await request.query(query);
 
@@ -87,18 +82,33 @@ app.post('/subcategorias', async (req, res) => {
         // Conectar ao banco de dados
         await sql.connect(dbConfig);
 
-        const query = `
-        SELECT Nome
-        FROM Subcategorias
-        WHERE Nome LIKE @searchTerm AND ID_Categoria = @ID_Categoria
-        `;
-        const request = new sql.Request();
-        request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
-        request.input('ID_Categoria', sql.Int, categoria);
-        const result = await request.query(query);
+        if (categoria > 0) {
+            const query = `
+            SELECT Nome
+            FROM Subcategorias
+            WHERE Nome LIKE @searchTerm AND ID_Categoria = @ID_Categoria
+            `;
+
+            const request = new sql.Request();
+            request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
+            request.input('ID_Categoria', sql.Int, categoria);
+            const result = await request.query(query);
+            // Retornar os resultados encontrados
+            res.json(result.recordset); 
+        } else {
+            const query = `
+            SELECT Nome
+            FROM Subcategorias
+            WHERE Nome LIKE @searchTerm
+            `;
+
+            const request = new sql.Request();
+            request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
+            const result = await request.query(query);
+            // Retornar os resultados encontrados
+            res.json(result.recordset);
+        }
     
-        // Retornar os resultados encontrados
-        res.json(result.recordset); 
       } catch (err) {
         console.error('Erro na consulta ao banco de dados:', err);
         res.status(500).send('Erro no servidor');
