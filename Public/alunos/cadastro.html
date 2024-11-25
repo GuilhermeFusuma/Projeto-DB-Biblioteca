@@ -3,20 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cadastro.css">
     <title>Document</title>
 </head>
 <body>
+    <img src="ULWr.gif" alt="" id="fundo">
+    <div id="title">
+        <h1>Cadastro Biblioteca</h1>
+    </div>
     <form id="cadastroForm">
-        <label for="email">Email</label>
+        <div id="linha"></div>
+        <label for="email"><h2>Email</h2></label>
         <input type="text" id="email" required>
-        <label for="nome">Nome Completo</label>
+        <label for="nome"><h2>Nome Completo</h2></label>
         <input type="text" id="nome" required>
-        <label for="curso">Curso</label>
+        <label for="curso"><h2>Curso</h2></label>
         <select id="curso">
             <option value="">Selecione o Curso</option>
             <option value="1">DevT</option>
         </select>
         <button type="submit">Cadastrar</button>
+        <div id="linha"></div>
     </form>
 
     <script>
