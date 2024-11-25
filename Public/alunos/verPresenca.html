@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="verPresenca.css">
+    <title>Visualizar presença de alunos</title>
+</head>
+<body>
+    <header>
+        <img src="senai.png" alt="">
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar...">
+            <button type="button" class="search-button">
+                <i class="fa fa-search"></i> <!-- Usando FontAwesome para o ícone da lupa -->
+            </button>
+        </div>
+    </header>
+    <div class="le">
+        <a href=""><h1>Livros</h1></a>
+        <a href=""><h1>Empréstimos</h1></a>
+        <a href=""><h1>Presença</h1></a>
+    </div>
+    <main>
+        <h2>Lista de Presença</h2>
+        <div id="organizacao">
+            <label for="opcoes">Organizar por:</label>
+            <select name="opcoes" id="opcoes">
+                <option value="">Padrão</option>
+                <option value="curso">Curso</option>
+                <option value="presenca">Presença</option>
+                <option value="email">E-mail</option>
+                <option value="nome">Nome</option>
+            </select>
+        </div>
+        <div class="listPresenca">
+            <div class="itemPresenca">
+                <div class="nome item_dado">
+                    <p>Nome do aluno: </p>
+                    <p>Marcinho Bolsonaro Senai</p>
+                </div>
+                <div class="email item_dado">
+                    <p>E-mail:</p>
+                    <p>marciolula2024@gmail.com</p>
+                </div>
+                <div class="curso item_dado">
+                    <p>Curso:</p>
+                    <p>Programador gostoso</p>
+                </div>
+                <div class="presenca item_dado">
+                    <p>Presenças no mês</p>
+                    <p>3</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
