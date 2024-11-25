@@ -74,6 +74,26 @@ app.post('/livros', async (req, res) => {
     }
 });
 
+app.get('/conseguirCategorias', async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
+
+        const result = await sql.query('SELECT ID, Nome FROM GeneroCategoria');
+         // Se a consulta não retornar nenhum dado
+         if (result.recordset.length === 0) {
+            return res.status(404).send('Nenhuma categoria encontrada');
+        }
+        
+        res.json(result.recordset);
+    } catch (error) {
+        console.error('Erro ao conseguir categorias: ', error);
+        res.status(500).send('Erro interno no servidor.');
+    } finally {
+        await sql.close();
+    }
+});
+
+
 // Endpoint para procurar subcategorias
 app.post('/subcategorias', async (req, res) => {
     const {searchTerm, categoria} = req.body;
@@ -171,7 +191,7 @@ app.post('/presenca', async (req, res) => {
 });
 
 app.post('/pesquisaLivro', async (req, res) => {
-    
+
 });
 
 app.get('/mostrarLivros', async (req, res) => {
@@ -195,3 +215,17 @@ app.get('/mostrarLivros', async (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
+// Exemplo de requisição para Google Books API
+// const fetchISBN = async (titulo) => {
+//     const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=intitle:${titulo}`);
+//     const data = await response.json();
+  
+//     if (data.items) {
+//       const isbn = data.items[0].volumeInfo.industryIdentifiers.find(identifier => identifier.type === "ISBN_13")?.identifier;
+//       console.log("ISBN encontrado:", isbn);
+//       return isbn;
+//     } else {
+//       console.log("ISBN não encontrado.");
+//     }
+//   };

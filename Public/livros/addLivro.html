@@ -26,21 +26,6 @@
                 <input type="text" placeholder="Edição" id="edicao" required><br><br>
                 <select name="" id="categorias">
                     <option value="">Selecione a Categoria</option>
-                    <option value="1">Ficção</option>
-                    <option value="2">Não-Ficção</option>
-                    <option value="3">Ciência</option>
-                    <option value="4">História</option>
-                    <option value="5">Tecnologia</option>
-                    <option value="6">Artes</option>
-                    <option value="7">Literatura</option>
-                    <option value="8">Filosofia</option>
-                    <option value="9">Culinária</option>
-                    <option value="10">Psicologia</option>
-                    <option value="12">Economia</option>
-                    <option value="13">Política</option>
-                    <option value="14">Educação</option>
-                    <option value="15">Saúde</option>
-                    <option value="16">Viagens</option>
                 </select>
                 <input type="text" id="subCategoria" list="sugestoes" placeholder="Subcategoria">
                 <datalist id="sugestoes"></datalist>
@@ -54,10 +39,9 @@
         document.getElementById('subCategoria').addEventListener('input', async () => {
             const searchTerm = document.getElementById('subCategoria').value;
             const categoria = document.getElementById('categorias').value;
+            const sugestoesLista = document.getElementById('sugestoes');
             
             if (searchTerm.length > 0) {
-                const sugestoesLista = document.getElementById('sugestoes');
-
                 try {
                     const response = await fetch('http://localhost:3000/subcategorias', {
                         method: 'POST',
@@ -83,6 +67,32 @@
                 sugestoesLista.innerHTML = ''; // Limpar se o campo estiver vazio
             }
         });
+
+        // conseguir as categorias para aparecer no select
+        const categoriasSelect = document.getElementById('categorias');
+        if (categoriasSelect.innerHTML = '<option value="">Selecione a Categoria</option>') {
+            categoriasSelect.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('http://localhost:3000/conseguirCategorias');
+                    // Verifica se a resposta foi bem-sucedida (status 200-299)
+                    if (!response.ok) {
+                        throw new Error(`Erro na requisição: ${response.statusText}`);
+                    }
+
+                    const categoriasArr = await response.json()
+                    // função que cria uma opção com o valor adequado para cada categoria
+                    categoriasArr.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.ID; // insere o ID da categoria no valor da opção
+                        option.innerText = item.Nome;
+                        categoriasSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Erro ao encontrar categorias: ', error.message);
+                }
+            });
+        }
+        
 
         document.getElementById('livroForm').addEventListener('submit', async (event) => {  
             event.preventDefault();
