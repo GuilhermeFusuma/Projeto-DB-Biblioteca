@@ -105,8 +105,8 @@ app.post('/subcategorias', async (req, res) => {
         if (categoria > 0) {
             const query = `
             SELECT Nome
-            FROM Subcategorias
-            WHERE Nome LIKE @searchTerm AND ID_Categoria = @ID_Categoria
+            FROM Assuntos
+            WHERE Nome LIKE @searchTerm AND ID_GeneroCategoria = @ID_Categoria
             `;
 
             const request = new sql.Request();
@@ -118,7 +118,7 @@ app.post('/subcategorias', async (req, res) => {
         } else {
             const query = `
             SELECT Nome
-            FROM Subcategorias
+            FROM Assuntos
             WHERE Nome LIKE @searchTerm
             `;
 
