@@ -8,23 +8,37 @@
 </head>
 <body>
     <img src="ULWr.gif" alt="" id="fundo">
+    <div class="senai">
+        <a href=""><img src="senai.png" alt=""></a>
+    </div>
     <div id="title">
+        <div id="linha"></div>
         <h1>Cadastro Biblioteca</h1>
+        <div id="linha"></div>
     </div>
     <form id="cadastroForm">
         <div id="linha"></div>
-        <label for="email"><h2>Email</h2></label>
-        <input type="text" id="email" required>
-        <label for="nome"><h2>Nome Completo</h2></label>
-        <input type="text" id="nome" required>
-        <label for="curso"><h2>Curso</h2></label>
-        <select id="curso">
-            <option value="">Selecione o Curso</option>
-            <option value="1">DevT</option>
-        </select>
+        <div id="x">
+            <label for="email"><h2>Email</h2></label>
+            <input type="text" placeholder="Digite aqui" id="email" required>
+        </div>
+        <div id="x">
+            <label for="nome"><h2>Nome Completo</h2></label>
+            <input type="text" placeholder="Digite aqui" id="nome" required>
+        </div>
+        <div id="y">
+            <label for="curso"><h2>Curso</h2></label>
+            <select id="curso">
+                <option value="">Selecione o Curso</option>
+                <option value="1">DevT</option>
+            </select>
+        </div>
         <button type="submit">Cadastrar</button>
         <div id="linha"></div>
     </form>
+    <div class="voltar">
+        <a href=""><img src="voltar.png" alt=""></a>
+    </div>
 
     <script>
         document.getElementById('cadastroForm').addEventListener('submit', async (event) => {
