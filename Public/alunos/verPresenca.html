@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <img src="senai.png" alt="">
+        <img src="http://localhost:3000/img/senai.png" alt="">
         <div class="search-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar...">
             <button type="button" class="search-button">
@@ -33,22 +33,50 @@
                 <div class="nPresenca column">Num Presenças</div>
             </div>
             <div id="listPresenca">
-                <div class="aluno_info row" style="--list_border: black; --cell_color: white;">
-                    <div class="num column"></div>
-                    <div class="nome column">Guilherme Fusuma</div>
-                    <div class="email column">fuskenji@gmail.com</div>
-                    <div class="curso column">DevT</div>
-                    <div class="nPresenca column">2</div>
-                </div>
-                <div class="aluno_info row" style="--list_border: black; --cell_color: rgb(209, 209, 209);">
-                    <div class="num column"></div>
-                    <div class="nome column">Guilherme Fusuma</div>
-                    <div class="email column">fuskenji@gmail.com</div>
-                    <div class="curso column">DevT</div>
-                    <div class="nPresenca column">2</div>
                 </div>
             </div>
         </div>
     </main>
+    <script>
+        function montarLista(obj) {
+            const lista = document.getElementById('listPresenca'); //tabela que será inserida os alunos
+            
+            let counter = 0;
+            //loop para construir a tabela, aluno por aluno
+            obj.forEach(item => {
+                let numDiv = parImpar(counter);
+                let corBordas
+                if (numDiv == 'par') {
+                    corBordas = 'white';
+                } else {
+                    corBordas = 'rgb(209, 209, 209)';
+                }
+                let aluno_info = document.createElement('div');
+                aluno_info.style = `--list_border: black; --cell_color: ${corBordas}`
+                aluno_info.classList.add('aluno_info');
+                aluno_info.classList.add('row');
+                //monta a linha com as informações de cada aluno
+                aluno_info.innerHTML = ` 
+                    <div class="num column">${counter + 1}</div>
+                    <div class="nome column">${item.Nome_Completo}</div>
+                    <div class="email column">${item.Email}</div>
+                    <div class="curso column">${item.Nome_curso}</div>
+                    <div class="nPresenca column">${item.Presencas}</div>
+                    `;
+                //adiciona a linha à lista
+                lista.appendChild(aluno_info);
+
+                ++counter
+            });
+        }
+        function parImpar(num) {
+            const valor = num % 2;
+            if(valor === 0) {
+                return 'par';
+            } else {
+                return 'impar';
+            }
+        }
+    </script>
 </body>
 </html>
