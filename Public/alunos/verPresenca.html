@@ -24,33 +24,28 @@
     </div>
     <main>
         <h2>Lista de Presença</h2>
-        <div id="organizacao">
-            <label for="opcoes">Organizar por:</label>
-            <select name="opcoes" id="opcoes">
-                <option value="">Padrão</option>
-                <option value="curso">Curso</option>
-                <option value="presenca">Presença</option>
-                <option value="email">E-mail</option>
-                <option value="nome">Nome</option>
-            </select>
-        </div>
-        <div class="listPresenca">
-            <div class="itemPresenca">
-                <div class="nome item_dado">
-                    <p>Nome do aluno: </p>
-                    <p>Marcinho Bolsonaro Senai</p>
+        <div id="list">
+            <div id="columns" class="row" style="--list_border: white;">
+                <div class="num column"></div>
+                <div class="nome column">Nome</div>
+                <div class="email column">E-mail</div>
+                <div class="curso column">Curso</div>
+                <div class="nPresenca column">Num Presenças</div>
+            </div>
+            <div id="listPresenca">
+                <div class="aluno_info row" style="--list_border: black; --cell_color: white;">
+                    <div class="num column"></div>
+                    <div class="nome column">Guilherme Fusuma</div>
+                    <div class="email column">fuskenji@gmail.com</div>
+                    <div class="curso column">DevT</div>
+                    <div class="nPresenca column">2</div>
                 </div>
-                <div class="email item_dado">
-                    <p>E-mail:</p>
-                    <p>marciolula2024@gmail.com</p>
-                </div>
-                <div class="curso item_dado">
-                    <p>Curso:</p>
-                    <p>Programador gostoso</p>
-                </div>
-                <div class="presenca item_dado">
-                    <p>Presenças no mês</p>
-                    <p>3</p>
+                <div class="aluno_info row" style="--list_border: black; --cell_color: rgb(209, 209, 209);">
+                    <div class="num column"></div>
+                    <div class="nome column">Guilherme Fusuma</div>
+                    <div class="email column">fuskenji@gmail.com</div>
+                    <div class="curso column">DevT</div>
+                    <div class="nPresenca column">2</div>
                 </div>
             </div>
         </div>

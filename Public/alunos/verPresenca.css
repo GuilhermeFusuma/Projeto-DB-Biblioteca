@@ -107,42 +107,37 @@ main h2 {
     outline: none;
     width: 100%;
 }
-.listPresenca {
+#list {
     grid-column-start: 1;
     grid-column-end: 3;
-    padding: 2% 5%;
-    width: 90%;
-    height: 90%;
-    background: #dbdbdb65;
+    grid-row-start: 2;
 }
-.itemPresenca {
-    background: #DADADA;
+#listPresenca,
+#columns {
+    margin: 0;
+    width: 1100px;
+}
+#listPresenca {
+    height: fit-content;
+    max-height: 500px;
+}
+.row {
     display: grid;
-    padding: 20px;
-    border-radius: 10px;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    row-gap: 10px;
-    justify-content: start;
+    grid-template-columns: 1fr 6fr 6fr 4fr 4fr;
+    background: var(--list_border);
+    font-weight: bold;
+    gap: 1px;
+    justify-items: start;
+    padding-top: 1px;
 }
-.nome {
-    font-size: 1.5rem;
+.column {
+    height: 100%;
+    width: 100%;
+    padding: 5px;
 }
-.email {
-    grid-row-start: 2;
+.aluno_info .column {
+    background: var(--cell_color);
 }
-.curso {
-    grid-row-start: 3;
-}
-.presenca {
-    grid-row-start: 2;
-    grid-column-start: 2;
-}
-.item_dado {
-    display: flex;
-    gap: 5px;
-    width: fit-content;
-}
-.item_dado p:nth-child(1) {
-    color: red;
+#columns .column {
+    background: red;
 }
