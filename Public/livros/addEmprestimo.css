@@ -45,14 +45,6 @@ form input {
     background-color: #FBFBFB;
     border: 1px solid #646464;
 }
-form select {
-    font-size: 20px;
-    width: 82%;
-    padding: 8px 8px 8px 15px;
-    border-radius: 20px;
-    color: #646464;
-    background-color: #FBFBFB;
-}
 form h1 {
     width: 50vw;
 }
@@ -109,15 +101,9 @@ a {
     gap: 5vw;
     width: 50vw;
 }
-#between input {
-    width: 80%;
-}
-@media (max-width: 800px) {
-    #between {
-        display: flex;
-        flex-flow: column;
-    }
-}
 #date {
+    width: 80%;
     display: flex;
+    justify-content: flex-start;
+    padding-bottom: 20px;
 }

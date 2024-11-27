@@ -20,16 +20,10 @@
             <h1>Adicionar Empréstimo</h1>
             <br><br>
             <input type="text" placeholder="ID_Exemplar" id="ID_Exemplar" required><br><br>
-            <input type="text" placeholder="Aluno" id="" required><br><br>
-            <div id="between">
-                <div id="date">
-                    <label for="Data_de_Emprestimo"> Data de Empréstimo: </label>
-                    <input type="date" placeholder="" id="Data_de_Emprestimo" required>
-                </div>
-                <div id="date">
-                    <label for="Data_de_Devolucao"> Data de Devolução: </label>
-                    <input type="date" placeholder="" id="Data_de_Devolucao" required>
-                </div>
+            <input type="text" placeholder="Email" id="Email" required><br><br>
+            <div id="date">
+                <label for="Data_de_Emprestimo"> Data de Devolução: </label>
+                <input type="date" placeholder="" id="Data_de_Devolucao" required>
             </div>
             <button type="submit">Registrar Empréstimo</button>
         </form>
@@ -40,19 +34,17 @@
         document.getElementById('livroForm').addEventListener('submit', async (event) => {  // função que roda sempre que o form for enviado
             event.preventDefault(); // evita que a página seja reiniciada
 
-            const produto = {    // criação do objeto com os inputs do form
-                Titulo_livro: document.getElementById('titulo').value,
-                ID_Genero: document.getElementById('generos').value,
-                ID_Autor: document.getElementById('autores').value,
-                Volume: document.getElementById('volume').value,
-                Edição: document.getElementById('edicao').value
+            const emprestimo = {    // criação do objeto com os inputs do form
+                ID_Exemplar: document.getElementById('ID_Exemplar').value,
+                Email: document.getElementById('Email').value,
+                Data_Devolucao: document.getElementById('Data_de_devolucao').value
             };
   
             try {
-                const response = await fetch('http://localhost:3000/livros', {   // direciona o objeto para o código da rota /livros
+                const response = await fetch('http://localhost:3000/emprestimos', {   // direciona o objeto para o código da rota /livros
                     method: 'POST', //specifica o metodo usado para enviar o objeto
                     headers: {'Content-Type': 'application/json' },
-                    body: JSON.stringify(produto)   // objeto que será exportado para o app.js
+                    body: JSON.stringify(emprestimo)   // objeto que será exportado para o app.js
                 });
                 const message = await response.text()
                 alert(message);

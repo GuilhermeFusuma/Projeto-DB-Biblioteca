@@ -93,6 +93,38 @@ app.get('/conseguirCategorias', async (req, res) => {
     }
 });
 
+// Endpoint para adicionar Empréstimos
+app.post('/emprestimos', async (req, res) => {
+    const { ID_Exemplar, Email, Data_Devolucao} = req.body;
+
+    // Validação dos parâmetros
+    if (!ID_Exemplar || !Email || !Data_Devolucao) {
+                console.log( ID_Exemplar, Email, Data_Devolucao)
+        return res.status(400).send('Todos os campos são obrigatórios.');
+    }
+
+   
+try {
+    await sql.connect(dbConfig);
+
+      // Inserir o Empréstimo
+      const query = `
+        INSERT INTO Emprestimos (ID_Exemplar, Email, Data_Devolucao)
+        VALUES (@ID_Exemplar, @Email, @Data_Devolucao)
+        `;
+         const request = new sql.Request();
+             request.input('ID_Exemplar', sql.Int, ID_Exemplar);
+             request.input('Email', sql.NVarChar, Email)
+             request.input('Data_Devolucao', sql.Date, Data_Devolucao);
+             await request.query(query);
+ 
+    res.send('Empréstimo realizado com sucesso!');
+    } catch (error) {
+        console.error('Erro ao realizar empréstimo:', error);
+        res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
+    }
+})
+
 
 // Endpoint para procurar subcategorias
 app.post('/subcategorias', async (req, res) => {
