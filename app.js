@@ -21,11 +21,10 @@ app.use(express.static('public'));
 
 // Endpoint para adicionar livros
 app.post('/livros', async (req, res) => {
-    const { Titulo_livro, Autor, Volume, Edicao, Nome} = req.body;
+    const { Titulo_livro, Autor, Volume, Edicao, Subcategoria} = req.body;
 
     // Validação dos parâmetros
-    if (!Titulo_livro || !Autor || !Nome || !Volume || !Edicao) {
-        console.log(Titulo_livro, Autor, Nome, Volume, Edicao)
+    if (!Titulo_livro || !Autor || !Subcategoria || !Volume || !Edicao) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
     if (typeof Volume !== 'string' || Volume.length > 2) {
@@ -45,7 +44,7 @@ app.post('/livros', async (req, res) => {
             WHERE Nome = @Nome
         `;
         const requestSubcategoria = new sql.Request();
-        requestSubcategoria.input('Nome', sql.NVarChar, Nome); //salva o nome da subcategoria para realizar a consulta
+        requestSubcategoria.input('Nome', sql.NVarChar, Subcategoria); //salva o nome da subcategoria para realizar a consulta
         const ID_SubCategoria = await requestSubcategoria.query(querySubcategoria);
 
         if (ID_SubCategoria.recordset.length > 0) {
@@ -71,25 +70,6 @@ app.post('/livros', async (req, res) => {
     } catch (error) {
         console.error('Erro ao adicionar livro:', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
-    }
-});
-
-app.get('/conseguirCategorias', async (req, res) => {
-    try {
-        await sql.connect(dbConfig);
-
-        const result = await sql.query('SELECT ID, Nome FROM GeneroCategoria');
-         // Se a consulta não retornar nenhum dado
-         if (result.recordset.length === 0) {
-            return res.status(404).send('Nenhuma categoria encontrada');
-        }
-        
-        res.json(result.recordset);
-    } catch (error) {
-        console.error('Erro ao conseguir categorias: ', error);
-        res.status(500).send('Erro interno no servidor.');
-    } finally {
-        await sql.close();
     }
 });
 

@@ -26,6 +26,22 @@
                 <input type="text" placeholder="Edição" id="edicao" required><br><br>
                 <select name="" id="categorias">
                     <option value="">Selecione a Categoria</option>
+                    <option value="1">Ficção Científica</option>
+                    <option value="2">Fantasia</option>
+                    <option value="3">Mistério</option>
+                    <option value="4">Romance</option>
+                    <option value="5">Terror</option>
+                    <option value="6">Drama</option>
+                    <option value="7">Aventura</option>
+                    <option value="8">Histórico</option>
+                    <option value="9">Ficção</option>
+                    <option value="10">Não Ficção</option>
+                    <option value="11">Acadêmico</option>
+                    <option value="12">Saúde e Bem-Estar</option>
+                    <option value="13">Negócios e Economia</option>
+                    <option value="14">Arte e Design</option>
+                    <option value="15">Religião</option>
+                    <option value="16">Esportes</option>
                 </select>
                 <input type="text" id="subCategoria" list="sugestoes" placeholder="Subcategoria">
                 <datalist id="sugestoes"></datalist>
@@ -68,32 +84,6 @@
             }
         });
 
-        // conseguir as categorias para aparecer no select
-        const categoriasSelect = document.getElementById('categorias');
-        if (categoriasSelect.innerHTML = '<option value="">Selecione a Categoria</option>') {
-            categoriasSelect.addEventListener('click', async () => {
-                try {
-                    const response = await fetch('http://localhost:3000/conseguirCategorias');
-                    // Verifica se a resposta foi bem-sucedida (status 200-299)
-                    if (!response.ok) {
-                        throw new Error(`Erro na requisição: ${response.statusText}`);
-                    }
-
-                    const categoriasArr = await response.json()
-                    // função que cria uma opção com o valor adequado para cada categoria
-                    categoriasArr.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.ID; // insere o ID da categoria no valor da opção
-                        option.innerText = item.Nome;
-                        categoriasSelect.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error('Erro ao encontrar categorias: ', error.message);
-                }
-            });
-        }
-        
-
         document.getElementById('livroForm').addEventListener('submit', async (event) => {  
             event.preventDefault();
     
@@ -102,7 +92,7 @@
                 Autor: document.getElementById('autor').value,
                 Volume: document.getElementById('volume').value,
                 Edicao: document.getElementById('edicao').value,
-                Nome: document.getElementById('subCategoria').value  // ID correto
+                Subcategoria: document.getElementById('subCategoria').value  // ID correto
             };
       
             try {
