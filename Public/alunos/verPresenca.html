@@ -27,17 +27,24 @@
         <div id="list">
             <div id="columns" class="row" style="--list_border: white;">
                 <div class="num column"></div>
-                <div class="nome column">Nome</div>
-                <div class="email column">E-mail</div>
+                <div class="nome column">
+                    <p>Nome</p>
+                    <i class="fa-solid fa-chevron-down" id="nomeArrow"></i>
+                </div>
+                <div class="email column">
+                    <p>Email</p>
+                    <i class="fa-solid fa-chevron-down" id="EmailArrow"></i>
+                </div>
                 <div class="curso column">Curso</div>
                 <div class="nPresenca column">Num Presenças</div>
             </div>
             <div id="listPresenca">
-                </div>
             </div>
         </div>
     </main>
     <script>
+        let lista = [];
+
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const response = await fetch('http://localhost:3000/verPresenca');
@@ -48,22 +55,83 @@
             }
             
             // Converte a resposta para JSON
-            const alunos = await response.json();
+            lista = await response.json();
 
-                montarLista(alunos);
+            montarLista(lista);
             } catch (error) {
                 alert('Erro em conseguir alunos');
             }
         });
 
+        let nOrdenacaoAscendente = true; // Flag para controlar a ordenação crescente/decrescente
+        const nomeArrow = document.getElementById('nomeArrow');
+        nomeArrow.addEventListener('click', () => {
+            // Alterna entre ordenação crescente e decrescente
+            nOrdenacaoAscendente = !nOrdenacaoAscendente;
+
+            // Adiciona a classe que faz o objeto girar
+            nomeArrow.classList.toggle('rotacionar');
+
+            organizarLista(lista, "Nome");
+            montarLista(lista);
+
+            //reseta os outros campos
+            eOrdenacaoAscendente = true;
+            pOrdenacaoAscendente = true;
+        });
+        
+        let eOrdenacaoAscendente = true; // Flag para controlar a ordenação crescente/decrescente
+        const EmailArrow = document.getElementById('EmailArrow');
+        EmailArrow.addEventListener('click', () => {
+            // Alterna entre ordenação crescente e decrescente
+            eOrdenacaoAscendente = !eOrdenacaoAscendente;
+
+            // Adiciona a classe que faz o objeto girar
+            nomeArrow.classList.toggle('rotacionar');
+
+            organizarLista(lista, "Nome");
+            montarLista(lista);
+
+            //reseta os outros campos
+            eOrdenacaoAscendente = true;
+            pOrdenacaoAscendente = true;
+        });
+        
+        function organizarLista(obj, tipo) {
+            switch (tipo) {
+                case "Nome":
+                    obj.sort((a, b) => {
+                        if (NordenacaoAscendente) {
+                            return a.Nome_Completo.localeCompare(b.Nome_Completo);
+                        } else {
+                            return b.Nome_Completo.localeCompare(a.Nome_Completo);
+                        }
+                    });
+                    break;
+                case "Email":
+                    obj.sort((a, b) => {
+                        if (eOrdenacaoAscendente) {
+                            return a.Email.localeCompare(b.Email);
+                        } else {
+                            return b.Email.localeCompare(a.Email);
+                        }
+                    });
+                    break;
+                case "Presencas":
+                    obj.sort((a, b) => a.Presencas - b.Presencas);
+            }
+        };
+
         function montarLista(obj) {
             const lista = document.getElementById('listPresenca'); //tabela que será inserida os alunos
+
+            lista.innerHTML = '';
             
             let counter = 0;
             //loop para construir a tabela, aluno por aluno
             obj.forEach(item => {
                 let numDiv = parImpar(counter);
-                let corBordas
+                let corBordas;
                 if (numDiv == 'par') {
                     corBordas = 'white';
                 } else {
@@ -87,6 +155,7 @@
                 ++counter
             });
         }
+
         function parImpar(num) {
             const valor = num % 2;
             if(valor === 0) {

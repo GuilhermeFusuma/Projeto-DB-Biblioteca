@@ -82,25 +82,6 @@ main {
 main h2 {
     color: white;
 }
-#organizacao {
-    position: relative;
-    padding: 2px;
-    height: fit-content;
-    background-color: #DBDBDB;
-    border: 1px solid var(--border-color);
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    scale: 1.2;
-}
-#organizacao::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    left: 50%;
-    width: 1px;
-    height: 100%;
-    background-color: var(--border-color);
-}
 #opcoes {
     background: none;
     border: none;
@@ -119,7 +100,37 @@ main h2 {
 }
 #listPresenca {
     height: fit-content;
-    max-height: 500px;
+    max-height: 700px;
+    overflow-y: auto;
+}
+#listPresenca::-webkit-scrollbar {
+
+    width: 12px; /* Largura da barra de rolagem vertical */
+    height: 12px; /* Altura da barra de rolagem horizontal */
+}
+.column {
+    height: 100%;
+    width: 100%;
+    padding: 5px;
+}
+#columns .column {
+    display: flex;
+    justify-content: space-between;
+}
+#columns .column * {
+    margin: 0;
+}
+#columns .column i {
+    color: white;
+    scale: 1.5;
+    margin-right: 10px;
+    transition: 70ms;
+}
+#columns .column i:hover {
+    transform: scale(1.1);
+}
+.rotacionar {
+    rotate: 180deg;
 }
 .row {
     display: grid;
@@ -130,10 +141,14 @@ main h2 {
     justify-items: start;
     padding-top: 1px;
 }
-.column {
-    height: 100%;
-    width: 100%;
-    padding: 5px;
+.ordemBtn {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    transition: 70ms;
+}
+.ordemBtn:hover {
+    transform: scale(1.1);
 }
 .aluno_info .column {
     background: var(--cell_color);
