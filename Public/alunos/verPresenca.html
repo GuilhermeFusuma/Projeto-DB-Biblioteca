@@ -20,7 +20,7 @@
     <div class="le">
         <a href=""><h1>Livros</h1></a>
         <a href=""><h1>Empréstimos</h1></a>
-        <a href=""><h1>Presença</h1></a>
+        <a href="/alunos/presença.html"><h1>Presença</h1></a>
     </div>
     <main>
         <h2>Lista de Presença</h2>
@@ -38,6 +38,24 @@
         </div>
     </main>
     <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:3000/verPresenca');
+            
+                // Verifica se a resposta foi bem-sucedida
+            if (!response.ok) {
+                throw new Error('Falha ao obter os dados');
+            }
+            
+            // Converte a resposta para JSON
+            const alunos = await response.json();
+
+                montarLista(alunos);
+            } catch (error) {
+                alert('Erro em conseguir alunos');
+            }
+        });
+
         function montarLista(obj) {
             const lista = document.getElementById('listPresenca'); //tabela que será inserida os alunos
             

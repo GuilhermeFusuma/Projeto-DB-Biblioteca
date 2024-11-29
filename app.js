@@ -222,6 +222,22 @@ app.post('/presenca', async (req, res) => {
     }
 });
 
+app.get('/verPresenca', async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
+
+        const result = await sql.query('SELECT * FROM VW_AlunosPresenca');
+
+        if (result.recordset.length > 0) {
+            res.json(result.recordset);
+        } else {
+            res.send('Alunos não encontrados');
+        }
+    } catch (error) {
+        res.status(500).send('Erro Ao encontrar alunos');
+    }
+})
+
 app.post('/pesquisaLivro', async (req, res) => {
 
 });
