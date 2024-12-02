@@ -6,6 +6,34 @@ GO
 
 USE BibliotecaDB
 
+-- Primeiro, conecte-se ao banco de dados principal
+USE master;
+GO
+
+-- Crie o login do SQL Server com uma senha
+CREATE LOGIN appLogin
+WITH PASSWORD = 'SenhaBiblioteca69';
+GO
+
+-- Crie um usuário no banco de dados específico e associe ao login
+USE BibliotecaDB;
+GO
+
+CREATE USER appLogin
+FOR LOGIN appLogin;
+GO
+
+-- Atribua ao usuário a função db_owner, que concede permissões amplas no banco de dados
+ALTER ROLE db_owner ADD MEMBER appLogin;
+GO
+
+-- Opcional: conceda permissões de servidor adicionais para acesso total ao SQL Server
+USE master;
+GO
+
+ALTER SERVER ROLE sysadmin ADD MEMBER appLogin;
+GO
+
 CREATE TABLE Cursos(
 	ID_Curso INT IDENTITY(1, 1) PRIMARY KEY,
 	Nome_curso VARCHAR(100)
@@ -21,27 +49,42 @@ CREATE TABLE Alunos(
 )
 GO
 
-CREATE TABLE Categorias (
-    ID_Categoria INT IDENTITY(1,1) PRIMARY KEY,
-    Nome VARCHAR(100) NOT NULL
-)
-GO
+--CREATE TABLE Categorias (
+--    ID_Categoria INT IDENTITY(1,1) PRIMARY KEY,
+--    Nome VARCHAR(100) NOT NULL
+--)
+--GO
 
-CREATE TABLE Subcategorias (
-    ID_Subcategoria INT IDENTITY(1,1) PRIMARY KEY,
-    Nome VARCHAR(100) NOT NULL,
-    ID_Categoria INT,
-    FOREIGN KEY (ID_Categoria) REFERENCES Categorias(ID_Categoria)
+--CREATE TABLE Subcategorias (
+--    ID_Subcategoria INT IDENTITY(1,1) PRIMARY KEY,
+--    Nome VARCHAR(100) NOT NULL,
+--    ID_Categoria INT,
+--    FOREIGN KEY (ID_Categoria) REFERENCES Categorias(ID_Categoria)
+--);
+--GO
+
+CREATE TABLE GeneroCategoria (
+    ID INT PRIMARY KEY IDENTITY(1,1),  -- Identificador único
+    Tipo VARCHAR(50),                   -- 'Gênero' ou 'Categoria'
+    Nome VARCHAR(100) NOT NULL          -- Nome do gênero ou categoria (ex.: 'Ficção', 'Romance', etc.)
 );
 GO
+
+CREATE TABLE Assuntos (
+    ID INT PRIMARY KEY IDENTITY(1,1),  -- Identificador único do assunto
+    ID_GeneroCategoria INT,             -- Chave estrangeira que referencia Gênero ou Categoria
+    Nome VARCHAR(100) NOT NULL,         -- Nome do assunto ou subcategoria (ex.: 'Romance', 'História', etc.)
+    FOREIGN KEY (ID_GeneroCategoria) REFERENCES GeneroCategoria(ID)  -- Relacionamento com a tabela de Gêneros e Categorias
+);
+
 
 CREATE TABLE Titulos(
 	ID_Titulo INT IDENTITY(1, 1) PRIMARY KEY,
 	Autor VARCHAR(100),
 	Volume VARCHAR,
 	Edicao VARCHAR,
-	Ano_Publicacao DATE,
 	ID_SubCategoria INT,
+	Data_Registro DATETIME DEFAULT GETDATE()
 	FOREIGN KEY (ID_SubCategoria) REFERENCES SubCategorias(ID_SubCategoria)
 )
 GO
@@ -80,142 +123,20 @@ INSERT INTO Cursos(Nome_curso)
 VALUES ('DEVT')
 GO
 
-INSERT INTO Categorias (Nome)
-VALUES 
-('Ficção'),
-('Não-Ficção'),
-('Ciência'),
-('História'),
-('Tecnologia'),
-('Artes'),
-('Literatura'),
-('Filosofia'),
-('Culinária'),
-('Psicologia'),
-('Economia'),
-('Política'),
-('Educação'),
-('Saúde'),
-('Viagens');
-GO
+CREATE OR ALTER PROCEDURE ADD_Alunos
+@Email VARCHAR(100),
+@Nome_Completo VARCHAR(100),
+@ID_Curso INT
+AS
+	INSERT INTO Alunos(Email, Nome_Completo, ID_Curso)
+	VALUES (@Email, @Nome_Completo, @ID_Curso)
 
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Biografia', 2),
-('Autoajuda', 2),
-('Saúde', 2),
-('Histórias Reais', 2);
-GO
+DELETE FROM clientes
+WHERE id = 1;
 
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Física', 3),
-('Química', 3),
-('Astronomia', 3),
-('Biologia', 3),
-('Geologia', 3);
-GO
+ALTER TABLE Subcategorias DROP CONSTRAINT FK__Subcatego__ID_Ca__3E52440B
+DROP TABLE Subcategorias
+ALTER TABLE Titulos DROP CONSTRAINT [FK__Titulos__ID_SubC__412EB0B6]
+ALTER TABLE Titulos DROP COLUMN ID_SubCategoria
+DROP TABLE Categorias
 
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('História Antiga', 4),
-('História Medieval', 4),
-('História Moderna', 4),
-('História Contemporânea', 4),
-('História da Arte', 4);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Inteligência Artificial', 5),
-('Desenvolvimento de Software', 5),
-('Redes e Segurança', 5),
-('Computação em Nuvem', 5),
-('Blockchain', 5);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Pintura', 6),
-('Escultura', 6),
-('Música', 6),
-('Dança', 6),
-('Teatro', 6),
-('Fotografia', 6);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Clássicos', 7),
-('Contos', 7),
-('Poesia', 7),
-('Drama', 7),
-('Literatura Brasileira', 7);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Ética', 8),
-('Lógica', 8),
-('Metafísica', 8),
-('Filosofia Política', 8),
-('Filosofia Contemporânea', 8);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Cozinha Italiana', 9),
-('Cozinha Francesa', 9),
-('Doces e Sobremesas', 9),
-('Cozinha Vegana', 9),
-('Cozinha Brasileira', 9);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Psicologia Clínica', 10),
-('Psicologia Social', 10),
-('Psicologia do Desenvolvimento', 10),
-('Neuropsicologia', 10);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Microeconomia', 11),
-('Macroeconomia', 11),
-('Economia Internacional', 11),
-('Economia Ambiental', 11);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Teoria Política', 12),
-('Política Internacional', 12),
-('Política Brasileira', 12),
-('Partidos e Eleições', 12);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Educação Infantil', 13),
-('Educação Básica', 13),
-('Ensino Superior', 13),
-('Pedagogia', 13);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Medicina', 14),
-('Enfermagem', 14),
-('Nutrição', 14),
-('Saúde Mental', 14),
-('Saúde Pública', 14);
-GO
-
-INSERT INTO Subcategorias (Nome, ID_Categoria)
-VALUES 
-('Turismo de Aventura', 15),
-('Turismo Cultural', 15),
-('Turismo de Lazer', 15),
-('Turismo de Negócios', 15);
-GO
