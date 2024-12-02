@@ -103,8 +103,23 @@ try {
         console.error('Erro ao realizar empréstimo:', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
     }
-})
+});
 
+// Endpoint para procurar titulos
+app.get('/titulosGet', async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
+
+        const result = await sql.query('SELECT * FROM Titulos');
+        console.log(result.recordset);
+        res.json(result.recordset);
+    } catch (error) {
+        console.error('Erro na consulta ao banco de dados:', err);
+        res.status(500).send('Erro em conseguir titulos');
+    } finally {
+        await sql.close();
+    }
+});
 
 // Endpoint para procurar subcategorias
 app.post('/subcategorias', async (req, res) => {

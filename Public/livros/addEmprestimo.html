@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar livros</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="addEmprestimo.css">
 </head>
 <body>
@@ -19,11 +20,22 @@
         <form id="livroForm">
             <h1>Adicionar Empréstimo</h1>
             <br><br>
-            <input type="text" placeholder="ID_Exemplar" id="ID_Exemplar" required><br><br>
-            <input type="text" placeholder="Email" id="Email" required><br><br>
+            <div class="dropdown" id="formDropdown">
+                <div style="display: flex;">
+                    <p id="dropdownText">Selecione o Livro</p>
+                    <i class="fa-solid fa-chevron-down" id="nomeArrow"></i>
+                </div>
+                <div class="dropdown-content" id="formDropdown-content">
+                    <input id="searchInput" type="text" placeholder="Digite aqui para filtrar os livros">
+                    <select id="searchableSelect">
+                        <option value="">Selecione o livro</option>
+                    </select>
+                </div>
+            </div>
+            <input type="text" placeholder="Email do cliente" id="Email" required><br><br>
             <div id="date">
                 <label for="Data_de_Emprestimo"> Data de Devolução: </label>
-                <input type="date" placeholder="" id="Data_de_Devolucao" required>
+                <input type="date" id="Data_de_Devolucao" required>
             </div>
             <button type="submit">Registrar Empréstimo</button>
         </form>
@@ -35,7 +47,7 @@
             event.preventDefault(); // evita que a página seja reiniciada
 
             const emprestimo = {    // criação do objeto com os inputs do form
-                ID_Exemplar: document.getElementById('ID_Exemplar').value,
+                ID_Titulo: document.getElementById('searchableSelect').value,
                 Email: document.getElementById('Email').value,
                 Data_Devolucao: document.getElementById('Data_de_devolucao').value
             };
@@ -46,10 +58,53 @@
                     headers: {'Content-Type': 'application/json' },
                     body: JSON.stringify(emprestimo)   // objeto que será exportado para o app.js
                 });
-                const message = await response.text()
+                const message = await response.text();
                 alert(message);
             } catch (error) {
                 alert('Erro ao enviar dados: ' + error.message);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            //consegue os titulos do banco de dados
+            try {
+                const response = await fetch('http://localhost:3000/titulosGet');
+                if (!response.ok) {
+                    throw new Error('Falha ao obter os dados');
+                }
+                const select = document.getElementById('searchableSelect');
+
+                const listaTitulos = await response.json();
+                listaTitulos.forEach(titulo => {
+                    let option = document.createElement('option');
+                    option.innerHTML = titulo.Titulo_Livro;
+                    option.value = titulo.ID_Titulo;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                alert('Erro em conseguir os titulos: ' + error.message);
+            }
+        });
+
+        // Parte do input para selecionar o livro
+        const searchableSelect = document.getElementById('searchableSelect')
+        searchableSelect.addEventListener('change', () => {
+            const dropdownText = document.getElementById('dropdownText')
+            const titulo = searchableSelect.options[searchableSelect.selectedIndex].text;
+
+            dropdownText.innerHTML = '';
+            dropdownText.innerText = titulo; 
+        });
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', () => {
+            const filter = searchInput.value.toLowerCase();
+            const options = searchableSelect.options;
+
+            for (let i = 0; i < options.length; i++) {// loop que irá filtrar cada opção do select
+                const option = options[i];
+                const text = option.textContent.toLowerCase();
+                option.style.display = text.includes(filter) ? '' : 'none';
             }
         });
     </script>
