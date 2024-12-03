@@ -75,30 +75,55 @@ app.post('/livros', async (req, res) => {
 
 // Endpoint para adicionar Empréstimos
 app.post('/emprestimos', async (req, res) => {
-    const { ID_Exemplar, Email, Data_Devolucao} = req.body;
+    const { ID_Titulo, Email, Data_Devolucao} = req.body;
 
     // Validação dos parâmetros
-    if (!ID_Exemplar || !Email || !Data_Devolucao) {
-                console.log( ID_Exemplar, Email, Data_Devolucao)
+    if (!ID_Titulo || !Email || !Data_Devolucao) {
+                console.log( ID_Titulo, Email, Data_Devolucao)
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
 
    
-try {
-    await sql.connect(dbConfig);
+    try {
+        await sql.connect(dbConfig);
+        const result = await sql.query(`SELECT ID_Exemplar, status FROM Exemplares WHERE ID_Titulo = ${ID_Titulo} ORDER BY Exemplar`); // Executa a consulta
+        const exemplaresList = result.recordset; // Obtém os exemplares
+    
+        // Verifica se não há exemplares encontrados
+        if (exemplaresList.length <= 0) {
+            console.log(exemplaresList);
+            return res.status(404).send('Não foi encontrado exemplares com este título.');
+        }
 
-      // Inserir o Empréstimo
-      const query = `
-        INSERT INTO Emprestimos (ID_Exemplar, Email, Data_Devolucao)
-        VALUES (@ID_Exemplar, @Email, @Data_Devolucao)
+        let exemplarEncontrado = false;
+        let ID_Exemplar;
+    
+        for (let i = 0; i < exemplaresList.length; i++) {
+            let exemplar = exemplaresList[i];
+            if (exemplar.status === 'disponível') { // Verifica se o status é 'disponível'
+                ID_Exemplar = exemplar.ID_Exemplar;
+                exemplarEncontrado = true;
+                break; // Sai do loop assim que encontrar o exemplar disponível
+            }
+        }
+    
+        // Se nenhum exemplar disponível for encontrado
+        if (!exemplarEncontrado) {
+            return res.status(404).send('Nenhum exemplar disponível encontrado.');
+        }
+    
+        // Inserir o Empréstimo
+        const query = `
+        INSERT INTO Emprestimos (ID_Exemplar, Email, Data_Devolucao, Status)
+        VALUES (@ID_Exemplar, @Email, @Data_Devolucao, 'Emprestado')
         `;
-         const request = new sql.Request();
-             request.input('ID_Exemplar', sql.Int, ID_Exemplar);
-             request.input('Email', sql.NVarChar, Email)
-             request.input('Data_Devolucao', sql.Date, Data_Devolucao);
-             await request.query(query);
- 
-    res.send('Empréstimo realizado com sucesso!');
+        const request = new sql.Request();
+        request.input('ID_Exemplar', sql.Int, ID_Exemplar);
+        request.input('Email', sql.NVarChar, Email);
+        request.input('Data_Devolucao', sql.Date, Data_Devolucao);
+        await request.query(query);
+    
+        res.send('Empréstimo realizado com sucesso!');
     } catch (error) {
         console.error('Erro ao realizar empréstimo:', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
@@ -111,7 +136,6 @@ app.get('/titulosGet', async (req, res) => {
         await sql.connect(dbConfig);
 
         const result = await sql.query('SELECT * FROM Titulos');
-        console.log(result.recordset);
         res.json(result.recordset);
     } catch (error) {
         console.error('Erro na consulta ao banco de dados:', err);
