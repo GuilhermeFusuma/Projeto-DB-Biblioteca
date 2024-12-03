@@ -135,20 +135,33 @@ app.post('/emprestimos', async (req, res) => {
 
     // Validação dos parâmetros
     if (!ID_Titulo || !Email || !Data_Devolucao) {
-                console.log( ID_Titulo, Email, Data_Devolucao)
+        console.log( ID_Titulo, Email, Data_Devolucao);
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
-
    
     try {
         await sql.connect(dbConfig);
-        const result = await sql.query(`SELECT ID_Exemplar, status FROM Exemplares WHERE ID_Titulo = ${ID_Titulo} ORDER BY Exemplar`); // Executa a consulta
+
+        // Verifica se o Email existe na tabela Alunos
+        const checkEmailResult = await sql.query(`
+        SELECT COUNT(*) AS EmailExists 
+        FROM Alunos 
+        WHERE Email = '${Email}'
+        `);
+
+        const emailExists = checkEmailResult.recordset[0].EmailExists;
+
+        if (emailExists === 0) {
+            return res.status(400).send('Email não registrado. Por favor, registre o aluno antes de realizar o empréstimo.');
+        }
+
+        const result = await sql.query(`SELECT ID_Exemplar, status FROM Exemplares WHERE ID_Titulo = ${ID_Titulo} AND Status = 'disponível' ORDER BY Exemplar ASC`); // Executa a consulta
         const exemplaresList = result.recordset; // Obtém os exemplares
     
         // Verifica se não há exemplares encontrados
-        if (exemplaresList.length <= 0) {
+        if (exemplaresList.length == 0) {
             console.log(exemplaresList);
-            return res.status(404).send('Não foi encontrado exemplares com este título.');
+            return res.status(404).send('Não foi encontrado exemplares disponíveis para este livro.');
         }
 
         let exemplarEncontrado = false;
@@ -178,6 +191,10 @@ app.post('/emprestimos', async (req, res) => {
         request.input('Email', sql.NVarChar, Email);
         request.input('Data_Devolucao', sql.Date, Data_Devolucao);
         await request.query(query);
+
+        await sql.query(`UPDATE Exemplares
+            SET Status = 'Emprestado'
+            WHERE ID_Exemplar = ID_Exemplar`);
     
         res.send('Empréstimo realizado com sucesso!');
     } catch (error) {

@@ -14,7 +14,7 @@
     <div class="le">
         <a href="http://localhost:3000/livros/"><h1>Livros</h1></a>
         <a href=""><h1>Empréstimos</h1></a>
-        <a href="http://localhost:3000/alunos/presença.html"><h1>Presença</h1></a>
+        <a href="http://localhost:3000/alunos/verPresenca.html"><h1>Presença</h1></a>
     </div>
     <main>
         <form id="livroForm">
@@ -34,7 +34,7 @@
             </div>
             <input type="text" placeholder="Email do cliente" id="Email" required><br><br>
             <div id="date">
-                <label for="Data_de_Emprestimo"> Data de Devolução: </label>
+                <label for="Data_de_Devolucao"> Data de Devolução: </label>
                 <input type="date" id="Data_de_Devolucao" required>
             </div>
             <button type="submit">Registrar Empréstimo</button>
@@ -77,7 +77,7 @@
                 const listaTitulos = await response.json();
                 listaTitulos.forEach(titulo => {
                     let option = document.createElement('option');
-                    option.innerHTML = titulo.Titulo_Livro;
+                    option.innerHTML = `${titulo.Titulo_Livro}, ${titulo.Volume}, ${titulo.Edicao}`;
                     option.value = titulo.ID_Titulo;
                     select.appendChild(option);
                 });
