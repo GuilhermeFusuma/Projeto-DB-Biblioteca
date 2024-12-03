@@ -43,7 +43,7 @@
                     <option value="15">Religião</option>
                     <option value="16">Esportes</option>
                 </select>
-                <input type="text" id="subCategoria" list="sugestoes" placeholder="Subcategoria">
+                <input type="text" id="Assunto" list="sugestoes" placeholder="Assunto">
                 <datalist id="sugestoes"></datalist>
                 <button type="submit">Registrar livro</button>
             </div>
@@ -52,14 +52,14 @@
     </main>
 
     <script>
-        document.getElementById('subCategoria').addEventListener('input', async () => {
-            const searchTerm = document.getElementById('subCategoria').value;
+        document.getElementById('Assunto').addEventListener('input', async () => {
+            const searchTerm = document.getElementById('Assunto').value;
             const categoria = document.getElementById('categorias').value;
             const sugestoesLista = document.getElementById('sugestoes');
             
             if (searchTerm.length > 0) {
                 try {
-                    const response = await fetch('http://localhost:3000/subcategorias', {
+                    const response = await fetch('http://localhost:3000/assuntos', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'}, // Correção no nome do cabeçalho
                         body: JSON.stringify({ searchTerm, categoria }) // Envio de dados correto
@@ -77,7 +77,7 @@
                         });
                     }
                 } catch (error) {
-                    console.error('Erro ao buscar subcategorias:', error.message);
+                    console.error('Erro ao buscar assuntos:', error.message);
                 }
             } else {
                 sugestoesLista.innerHTML = ''; // Limpar se o campo estiver vazio
@@ -92,7 +92,7 @@
                 Autor: document.getElementById('autor').value,
                 Volume: document.getElementById('volume').value,
                 Edicao: document.getElementById('edicao').value,
-                Subcategoria: document.getElementById('subCategoria').value  // ID correto
+                Assunto: document.getElementById('Assunto').value  // ID correto
             };
       
             try {

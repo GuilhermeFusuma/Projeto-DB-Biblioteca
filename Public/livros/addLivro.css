@@ -41,7 +41,7 @@ form {
     grid-row-start: 3;
     grid-column-start: 1;
 }
-#subCategoria {
+#Assunto {
     grid-row-start: 3;
     grid-column-start: 2;
     width: 60%;

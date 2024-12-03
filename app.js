@@ -21,10 +21,10 @@ app.use(express.static('public'));
 
 // Endpoint para adicionar livros
 app.post('/livros', async (req, res) => {
-    const { Titulo_livro, Autor, Volume, Edicao, Subcategoria} = req.body;
+    const { Titulo_livro, Autor, Volume, Edicao, Assunto} = req.body;
 
     // Validação dos parâmetros
-    if (!Titulo_livro || !Autor || !Subcategoria || !Volume || !Edicao) {
+    if (!Titulo_livro || !Autor || !Assunto || !Volume || !Edicao) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
     if (typeof Volume !== 'string' || Volume.length > 2) {
@@ -37,40 +37,96 @@ app.post('/livros', async (req, res) => {
     try {
         await sql.connect(dbConfig);
 
-        // Consulta para obter o ID da subcategoria
-        const querySubcategoria = `
-            SELECT ID_Subcategoria
-            FROM Subcategorias
+        // Consulta para obter o ID do assunto
+        const queryAssunto = `
+            SELECT ID
+            FROM Assuntos
             WHERE Nome = @Nome
         `;
-        const requestSubcategoria = new sql.Request();
-        requestSubcategoria.input('Nome', sql.NVarChar, Subcategoria); //salva o nome da subcategoria para realizar a consulta
-        const ID_SubCategoria = await requestSubcategoria.query(querySubcategoria);
+        const requestAssunto = new sql.Request();
+        requestAssunto.input('Nome', sql.NVarChar, Assunto); //salva o nome do Assunto para realizar a consulta
+        const Assunto_idResult = await requestAssunto.query(queryAssunto);
 
-        if (ID_SubCategoria.recordset.length > 0) {
-            const ID_SubCategoriaValue = ID_SubCategoria.recordset[0].ID_Subcategoria;
+        if (Assunto_idResult.recordset.length > 0) {
+            const Assunto_id = Assunto_idResult.recordset[0].ID;
 
             // Inserir o livro
+            const checkQuery = await sql.query(`SELECT * 
+            FROM Titulos 
+            WHERE Titulo_livro = '${Titulo_livro}' AND Autor = '${Autor}' AND Volume = '${Volume}' AND Edicao = '${Edicao}' AND Assunto_id = '${Assunto_id}'
+            `);
+            const checkResult = checkQuery.recordset;
+
+            if (checkResult.length > 0) {
+                res.send('Atenção! Já existe um livro com as mesmas informações armazenado. O livro não será adicionado.');
+                return;
+            } 
             const query = `
-                INSERT INTO Titulos (Titulo_livro, Autor, Volume, Edicao, ID_SubCategoria)
-                VALUES (@Titulo_livro, @Autor, @Volume, @Edicao, @ID_SubCategoria)
+                INSERT INTO Titulos (Titulo_livro, Autor, Volume, Edicao, Assunto_id)
+                VALUES (@Titulo_livro, @Autor, @Volume, @Edicao, @Assunto_id)
             `;
             const request = new sql.Request();
             request.input('Titulo_livro', sql.NVarChar, Titulo_livro);
             request.input('Autor', sql.NVarChar, Autor)
             request.input('Volume', sql.VarChar(2), Volume);
             request.input('Edicao', sql.VarChar(4), Edicao);
-            request.input('ID_SubCategoria', sql.Int, ID_SubCategoriaValue);
+            request.input('Assunto_id', sql.Int, Assunto_id);
             await request.query(query);
+
+
 
             res.send('Livro adicionado com sucesso!');
         } else {
-            res.status(400).send('O nome da subcategoria não foi encontrado.');
+            res.status(400).send('O nome do assunto não foi encontrado.');
         }
     } catch (error) {
         console.error('Erro ao adicionar livro:', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
     }
+});
+
+// Endpoint para procurar assuntos
+app.post('/assuntos', async (req, res) => {
+    const {searchTerm, categoria} = req.body;
+
+    try {
+        // Conectar ao banco de dados
+        await sql.connect(dbConfig);
+
+        if (categoria > 0) {
+            const query = `
+            SELECT Nome
+            FROM Assuntos
+            WHERE Nome LIKE @searchTerm AND ID_GeneroCategoria = @ID_Categoria
+            `;
+
+            const request = new sql.Request();
+            request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
+            request.input('ID_Categoria', sql.Int, categoria);
+            const result = await request.query(query);
+            // Retornar os resultados encontrados
+            res.json(result.recordset); 
+        } else {
+            const query = `
+            SELECT Nome
+            FROM Assuntos
+            WHERE Nome LIKE @searchTerm
+            `;
+
+            const request = new sql.Request();
+            request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
+            const result = await request.query(query);
+            // Retornar os resultados encontrados
+            res.json(result.recordset);
+        }
+    
+      } catch (err) {
+        console.error('Erro na consulta ao banco de dados:', err);
+        res.status(500).send('Erro no servidor');
+      } finally {
+        // Fechar a conexão com o banco
+        await sql.close();
+      }
 });
 
 // Endpoint para adicionar Empréstimos
@@ -145,50 +201,6 @@ app.get('/titulosGet', async (req, res) => {
     }
 });
 
-// Endpoint para procurar subcategorias
-app.post('/subcategorias', async (req, res) => {
-    const {searchTerm, categoria} = req.body;
-
-    try {
-        // Conectar ao banco de dados
-        await sql.connect(dbConfig);
-
-        if (categoria > 0) {
-            const query = `
-            SELECT Nome
-            FROM Assuntos
-            WHERE Nome LIKE @searchTerm AND ID_GeneroCategoria = @ID_Categoria
-            `;
-
-            const request = new sql.Request();
-            request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
-            request.input('ID_Categoria', sql.Int, categoria);
-            const result = await request.query(query);
-            // Retornar os resultados encontrados
-            res.json(result.recordset); 
-        } else {
-            const query = `
-            SELECT Nome
-            FROM Assuntos
-            WHERE Nome LIKE @searchTerm
-            `;
-
-            const request = new sql.Request();
-            request.input('searchTerm', sql.NVarChar, `%${searchTerm}%`);
-            const result = await request.query(query);
-            // Retornar os resultados encontrados
-            res.json(result.recordset);
-        }
-    
-      } catch (err) {
-        console.error('Erro na consulta ao banco de dados:', err);
-        res.status(500).send('Erro no servidor');
-      } finally {
-        // Fechar a conexão com o banco
-        await sql.close();
-      }
-});
-
 // Endpoint para cadastro de alunos
 app.post('/cadastro', async (req, res) => {
     const { Nome_Completo, ID_Curso, Email } = req.body;
@@ -255,7 +267,7 @@ app.get('/verPresenca', async (req, res) => {
     } catch (error) {
         res.status(500).send('Erro Ao encontrar alunos');
     }
-})
+});
 
 app.post('/pesquisaLivro', async (req, res) => {
 
