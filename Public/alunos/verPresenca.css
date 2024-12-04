@@ -17,7 +17,7 @@ header {
     align-items: center;
 }
 header img {
-    padding: 25px;
+    margin-left: 10%;   
     height: 30px;
 }
 /* Contêiner do campo de pesquisa */
@@ -129,6 +129,7 @@ main h2 {
 }
 #columns .column i:hover {
     transform: scale(1.1);
+    cursor: pointer;
 }
 .rotacionar {
     rotate: 180deg;
