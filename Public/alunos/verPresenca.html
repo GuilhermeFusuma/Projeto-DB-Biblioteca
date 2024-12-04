@@ -11,7 +11,7 @@
     <header>
         <img src="http://localhost:3000/img/senai.png" alt="">
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar...">
+            <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por usuários">
             <button type="button" class="search-button">
                 <i class="fa fa-search"></i> <!-- Usando FontAwesome para o ícone da lupa -->
             </button>
@@ -64,6 +64,18 @@
             } catch (error) {
                 alert('Erro em conseguir usuarios');
             }
+        });
+
+        function filterData(query) {
+            return lista.filter(item =>
+                item.Nome_Completo.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value;
+            montarLista(filterData(query));
         });
 
         let nOrdenacaoAscendente = true; // Flag para controlar a ordenação crescente/decrescente
