@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="verPresenca.css">
-    <title>Visualizar presença de alunos</title>
+    <title>Visualizar presença de usuários</title>
 </head>
 <body>
     <header>
@@ -35,8 +35,11 @@
                     <p>Email</p>
                     <i class="fa-solid fa-chevron-down" id="EmailArrow"></i>
                 </div>
-                <div class="curso column">Curso</div>
-                <div class="nPresenca column">Num Presenças</div>
+                <div class="curso column">Tipo</div>
+                <div class="nPresenca column">
+                    <p>Num Presenças</p>
+                    <i class="fa-solid fa-chevron-down" id="presencaArrow"></i>
+                </div>
             </div>
             <div id="listPresenca">
             </div>
@@ -59,7 +62,7 @@
 
             montarLista(lista);
             } catch (error) {
-                alert('Erro em conseguir alunos');
+                alert('Erro em conseguir usuarios');
             }
         });
 
@@ -99,6 +102,23 @@
             pOrdenacaoAscendente = true;
         });
         
+        const presencaArrow = document.getElementById('presencaArrow');
+        presencaArrow.addEventListener('click', () => {
+
+            // Adiciona a classe que faz o objeto girar
+            presencaArrow.classList.toggle('rotacionar');
+
+            organizarLista(lista, "Presencas");
+            montarLista(lista);
+
+            // Alterna entre ordenação crescente e decrescente
+            pOrdenacaoAscendente = !pOrdenacaoAscendente;
+
+            //reseta os outros campos
+            nOrdenacaoAscendente = true;
+            eOrdenacaoAscendente = true;
+        });
+
         function organizarLista(obj, tipo) {
             switch (tipo) {
                 case "Nome":
@@ -120,17 +140,24 @@
                     });
                     break;
                 case "Presencas":
-                    obj.sort((a, b) => a.Presencas - b.Presencas);
+                    obj.sort((a, b) => {
+                        if (pOrdenacaoAscendente) {
+                            return a.Presencas - b.Presencas;
+                        } else {
+                            return b.Presencas - a.Presencas;
+                        }
+                    });
+                    break;
             }
         };
 
         function montarLista(obj) {
-            const lista = document.getElementById('listPresenca'); //tabela que será inserida os alunos
+            const lista = document.getElementById('listPresenca'); //tabela que será inserida os usuarios
 
             lista.innerHTML = '';
             
             let counter = 0;
-            //loop para construir a tabela, aluno por aluno
+            //loop para construir a tabela, usuario por usuario
             obj.forEach(item => {
                 let numDiv = parImpar(counter);
                 let corBordas;
@@ -139,20 +166,20 @@
                 } else {
                     corBordas = 'rgb(209, 209, 209)';
                 }
-                let aluno_info = document.createElement('div');
-                aluno_info.style = `--list_border: black; --cell_color: ${corBordas}`
-                aluno_info.classList.add('aluno_info');
-                aluno_info.classList.add('row');
-                //monta a linha com as informações de cada aluno
-                aluno_info.innerHTML = ` 
+                let user_info = document.createElement('div');
+                user_info.style = `--list_border: black; --cell_color: ${corBordas}`
+                user_info.classList.add('aluno_info');
+                user_info.classList.add('row');
+                //monta a linha com as informações de cada user
+                user_info.innerHTML = ` 
                     <div class="num column">${counter + 1}</div>
                     <div class="nome column">${item.Nome_Completo}</div>
                     <div class="email column">${item.Email}</div>
-                    <div class="curso column">${item.Nome_curso}</div>
+                    <div class="curso column">${item.Nome}</div>
                     <div class="nPresenca column">${item.Presencas}</div>
                     `;
                 //adiciona a linha à lista
-                lista.appendChild(aluno_info);
+                lista.appendChild(user_info);
 
                 ++counter
             });

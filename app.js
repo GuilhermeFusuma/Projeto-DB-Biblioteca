@@ -274,7 +274,7 @@ app.get('/verPresenca', async (req, res) => {
     try {
         await sql.connect(dbConfig);
 
-        const result = await sql.query('SELECT * FROM VW_AlunosPresenca');
+        const result = await sql.query('SELECT * FROM VW_UsuariosPresenca');
 
         if (result.recordset.length > 0) {
             res.json(result.recordset);
