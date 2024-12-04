@@ -142,17 +142,17 @@ app.post('/emprestimos', async (req, res) => {
     try {
         await sql.connect(dbConfig);
 
-        // Verifica se o Email existe na tabela Alunos
+        // Verifica se o Email existe na tabela Usuarios
         const checkEmailResult = await sql.query(`
         SELECT COUNT(*) AS EmailExists 
-        FROM Alunos 
+        FROM Usuarios 
         WHERE Email = '${Email}'
         `);
 
         const emailExists = checkEmailResult.recordset[0].EmailExists;
 
         if (emailExists === 0) {
-            return res.status(400).send('Email não registrado. Por favor, registre o aluno antes de realizar o empréstimo.');
+            return res.status(400).send('Email não registrado. Por favor, registre o usuario antes de realizar o empréstimo.');
         }
 
         const result = await sql.query(`SELECT ID_Exemplar, status FROM Exemplares WHERE ID_Titulo = ${ID_Titulo} AND Status = 'disponível' ORDER BY Exemplar ASC`); // Executa a consulta
@@ -218,26 +218,26 @@ app.get('/titulosGet', async (req, res) => {
     }
 });
 
-// Endpoint para cadastro de alunos
+// Endpoint para cadastro de usuarios
 app.post('/cadastro', async (req, res) => {
-    const { Nome_Completo, ID_Curso, Email } = req.body;
+    const { Nome_Completo, ID_Tipo, Email } = req.body;
 
-    if (!Nome_Completo || !ID_Curso || !Email) {
+    if (!Nome_Completo || !ID_Tipo || !Email) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
 
     try {
-        const query = "EXEC ADD_Alunos @Email, @Nome_Completo, @ID_Curso";
+        const query = "EXEC ADD_Usuario @Email, @Nome_Completo, @ID_Tipo";
         await sql.connect(dbConfig);
         const request = new sql.Request();
         request.input('Nome_Completo', sql.VarChar(100), Nome_Completo);
-        request.input('ID_Curso', sql.Int, ID_Curso);
+        request.input('ID_Tipo', sql.Int, ID_Tipo);
         request.input('Email', sql.VarChar(100), Email);
         await request.query(query);
 
         res.send('Usuário cadastrado com sucesso!');
     } catch (error) {
-        console.error('Erro ao cadastrar aluno:', error);
+        console.error('Erro ao cadastrar usuario:', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
     } finally {
         await sql.close();
@@ -279,10 +279,10 @@ app.get('/verPresenca', async (req, res) => {
         if (result.recordset.length > 0) {
             res.json(result.recordset);
         } else {
-            res.send('Alunos não encontrados');
+            res.send('Usuarios não encontrados');
         }
     } catch (error) {
-        res.status(500).send('Erro Ao encontrar alunos');
+        res.status(500).send('Erro Ao encontrar usuarios');
     }
 });
 

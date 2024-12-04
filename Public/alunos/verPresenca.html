@@ -64,6 +64,8 @@
         });
 
         let nOrdenacaoAscendente = true; // Flag para controlar a ordenação crescente/decrescente
+        let eOrdenacaoAscendente = true; // Flag para controlar a ordenação crescente/decrescente
+        let pOrdenacaoAscendente = true; // Flag para controlar a ordenação crescente/decrescente
         const nomeArrow = document.getElementById('nomeArrow');
         nomeArrow.addEventListener('click', () => {
             // Alterna entre ordenação crescente e decrescente
@@ -80,20 +82,20 @@
             pOrdenacaoAscendente = true;
         });
         
-        let eOrdenacaoAscendente = true; // Flag para controlar a ordenação crescente/decrescente
-        const EmailArrow = document.getElementById('EmailArrow');
-        EmailArrow.addEventListener('click', () => {
+        const emailArrow = document.getElementById('EmailArrow');
+        emailArrow.addEventListener('click', () => {
+
+            // Adiciona a classe que faz o objeto girar
+            emailArrow.classList.toggle('rotacionar');
+
+            organizarLista(lista, "Email");
+            montarLista(lista);
+
             // Alterna entre ordenação crescente e decrescente
             eOrdenacaoAscendente = !eOrdenacaoAscendente;
 
-            // Adiciona a classe que faz o objeto girar
-            nomeArrow.classList.toggle('rotacionar');
-
-            organizarLista(lista, "Nome");
-            montarLista(lista);
-
             //reseta os outros campos
-            eOrdenacaoAscendente = true;
+            nOrdenacaoAscendente = true;
             pOrdenacaoAscendente = true;
         });
         
@@ -101,7 +103,7 @@
             switch (tipo) {
                 case "Nome":
                     obj.sort((a, b) => {
-                        if (NordenacaoAscendente) {
+                        if (nOrdenacaoAscendente) {
                             return a.Nome_Completo.localeCompare(b.Nome_Completo);
                         } else {
                             return b.Nome_Completo.localeCompare(a.Nome_Completo);
