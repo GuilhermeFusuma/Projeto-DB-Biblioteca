@@ -25,3 +25,40 @@ ALTER TABLE SubCategorias
 ADD CONSTRAINT FK_SubCategorias_GeneroCategoria
 FOREIGN KEY (ID_Categoria) REFERENCES GeneroCategoria(ID)
 
+EXEC sp_rename 'Alunos', 'Usuarios';
+EXEC sp_rename 'Cursos', 'Tipo_Usuarios';
+
+EXEC sp_rename 'Usuarios.ID_Curso', 'ID_Tipo';
+EXEC sp_rename 'Tipo_Usuarios.ID_Curso', 'ID_Tipo';
+EXEC sp_rename 'Cursos.Nome_curso', 'Nome';
+
+ALTER TABLE Usuarios
+DROP CONSTRAINT FK__Alunos__qtd_Empr__398D8EEE
+
+ALTER TABLE Usuarios
+ADD CONSTRAINT FK__Usuarios__Tipo_Usuarios FOREIGN KEY (ID_Tipo)
+REFERENCES Tipo_Usuarios(ID_Tipo)
+
+IF EXISTS (SELECT * 
+           FROM sys.objects 
+           WHERE object_id = OBJECT_ID(N'dbo.MinhaProcedure') AND type = N'P')
+BEGIN
+    DROP PROCEDURE dbo.ADD_Alunos;
+END
+
+CREATE OR ALTER PROCEDURE ADD_Usuario
+@Email VARCHAR(100),
+@Nome_Completo VARCHAR(100),
+@ID_Tipo INT
+AS
+	INSERT INTO Alunos(Email, Nome_Completo, ID_Tipo)
+	VALUES (@Email, @Nome_Completo, @ID_Tipo)
+
+SELECT *
+FROM Usuarios
+
+SELECT *
+FROM Emprestimos
+
+EXEC sp_help 'Usuarios';       -- Verifica a estrutura da tabela Usuarios
+EXEC sp_help 'Tipo_Usuarios'; -- Verifica a estrutura da tabela Tipo_Usuarios

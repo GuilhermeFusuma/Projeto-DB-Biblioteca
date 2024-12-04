@@ -93,7 +93,7 @@ CREATE TABLE Exemplares(
 	ID_Exemplar INT IDENTITY(1, 1) PRIMARY KEY,
 	Exemplar VARCHAR,
 	ID_Titulo INT NOT NULL,
-	Status VARCHAR
+	Status VARCHAR(100)
 	FOREIGN KEY (ID_Titulo)	REFERENCES Titulos(ID_Titulo)
 )
 GO
@@ -104,6 +104,7 @@ CREATE TABLE Emprestimos(
 	Email VARCHAR NOT NULL,
 	Data_Emprestimo DATETIME DEFAULT GETDATE(),
 	Data_Devolucao DATE,
+	Status VARCHAR(100)
 	FOREIGN KEY (ID_Exemplar) REFERENCES Exemplares(ID_Exemplar),
 	FOREIGN KEY (Email) REFERENCES Alunos(Email)
 )

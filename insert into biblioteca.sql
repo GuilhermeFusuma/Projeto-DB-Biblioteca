@@ -92,23 +92,28 @@ VALUES
 (15, 'Filosofia Religiosa'), -- Categoria 'Religião'
 (15, 'Teologia'),            -- Categoria 'Religião'
 (16, 'Futebol'),             -- Categoria 'Esportes'
-(16, 'Atletismo');     
+(16, 'Atletismo');    
+
 
 SELECT *
 FROM GeneroCategoria
 SELECT *
 FROM assuntos
 
-CREATE OR ALTER VIEW VW_AlunosPresenca
-AS
+CREATE OR ALTER VIEW VW_UsuariosPresenca AS
 SELECT 
 	DISTINCT Nome_Completo,
-	A.Email,
-	Nome_curso,
-	COUNT(P.Email) OVER (PARTITION BY (A.Email)) AS Presencas
-FROM Alunos A
-INNER JOIN Cursos C ON A.ID_Curso = C.ID_Curso
-INNER JOIN Presencas P ON A.Email = P.Email
+	U.Email,
+	T.Nome,
+	COUNT(P.Email) OVER (PARTITION BY (U.Email)) AS Presencas
+FROM Usuarios U
+INNER JOIN Tipo_Usuarios T ON U.ID_Tipo = T.ID_Tipo 
+INNER JOIN Presencas P ON U.Email = P.Email
+
+SELECT * FROM Usuarios
+SELECT *
+FROM Tipo_Usuarios
+SELECT * FROM VW_UsuariosPresenca
 
 CREATE OR ALTER FUNCTION ID_exemplarPorTitulo (@Titulo_livro VARCHAR(100))
 RETURNS INT
@@ -127,27 +132,14 @@ BEGIN
     RETURN @ID_exemplar
 END
 
-CREATE OR ALTER PROCEDURE Adicionar_Exemplar
-@Exemplar INT,
-@ID_Titulo INT
-AS
-	INSERT INTO Exemplares(Exemplar, ID_Titulo, Status)
-	VALUES (@Exemplar, @ID_Titulo, 'Disponível')
-
-CREATE OR ALTER TRIGGER	Atualizar_Exemplar
+CREATE OR ALTER TRIGGER	TR_Adicionar_Exemplar
 ON Titulos
 AFTER INSERT
 AS
 BEGIN
-	IF EXISTS (SELECT * FROM Titulos WHERE Titulo_Livro = (SELECT Titulo_Livro FROM inserted)
-	BEGIN
-		DECLARE @ID_Titulo INT
-		SET @ID_Titulo = (SELECT ID_Titulo FROM Titulos WHERE Titulo_Livro
-
-		UPDATE Exemplares
-		SET Exemplar = Exemplar + 1
-		WHERE ID_Titulo = @ID_Titulo
-	END
+	DECLARE @ID_Titulo INT
+	SET @ID_Titulo = (SELECT ID_Titulo FROM inserted)
+	INSERT INTO Exemplares(Exemplar, ID_Titulo, Status)
+	VALUES (1, @ID_Titulo, 'Disponível')
 END
-
 
