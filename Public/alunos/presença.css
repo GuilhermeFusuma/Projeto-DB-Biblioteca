@@ -67,6 +67,10 @@ button {
     justify-content: center;
     margin-left: 240px;
 }
+button:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
 a {
     color: blue;
 }

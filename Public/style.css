@@ -59,6 +59,10 @@ body {
     align-items: center;
     justify-content: center;
 }
+button:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
 h3 {
     color: white;
     text-align: center;

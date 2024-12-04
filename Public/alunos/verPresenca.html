@@ -20,7 +20,7 @@
     <div class="le">
         <a href="http://localhost:3000/livros/emprestimo.html"><h1>Livros</h1></a>
         <a href="http://localhost:3000/livros/livros.html"><h1>Empréstimos</h1></a>
-        <a href="/alunos/presença.html"><h1>Presença</h1></a>
+        <a href=""><h1>Presença</h1></a>
     </div>
     <main>
         <h2>Lista de Presença</h2>
@@ -83,6 +83,8 @@
             //reseta os outros campos
             eOrdenacaoAscendente = true;
             pOrdenacaoAscendente = true;
+            emailArrow.classList.remove('rotacionar');
+            presencaArrow.classList.remove('rotacionar');
         });
         
         const emailArrow = document.getElementById('EmailArrow');
@@ -100,6 +102,8 @@
             //reseta os outros campos
             nOrdenacaoAscendente = true;
             pOrdenacaoAscendente = true;
+            nomeArrow.classList.remove('rotacionar');
+            presencaArrow.classList.remove('rotacionar');
         });
         
         const presencaArrow = document.getElementById('presencaArrow');
@@ -117,6 +121,8 @@
             //reseta os outros campos
             nOrdenacaoAscendente = true;
             eOrdenacaoAscendente = true;
+            emailArrow.classList.remove('rotacionar');
+            nomeArrow.classList.remove('rotacionar');
         });
 
         function organizarLista(obj, tipo) {
