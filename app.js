@@ -202,6 +202,26 @@ app.post('/emprestimos', async (req, res) => {
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
     }
 });
+//Emprestimos
+app.get('VerEmprestimo',async (req, res) => {
+    try{
+      await sql.connect(dbConfig);
+
+      const resultado = await sql.query('SELECT Data_Emprestimo, Data_Devolucao, Nome_completo, FROM Emprestimos INNER JOIN Usuarios');
+      res.json(resultado.recordset);
+    }
+    catch (error) {
+        console.error('Erro na consulta ao banco de dados:', err);
+        res.status(500).send('erro ao visualizar Empréstimos');
+    }
+    finally{
+        await sql.close
+    }
+
+
+});
+
+
 
 // Endpoint para procurar titulos
 app.get('/titulosGet', async (req, res) => {
