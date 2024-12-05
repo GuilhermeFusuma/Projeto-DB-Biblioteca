@@ -302,7 +302,10 @@ app.get('/verPresenca', async (req, res) => {
             res.send('Usuarios não encontrados');
         }
     } catch (error) {
+        console.error(error);
         res.status(500).send('Erro Ao encontrar usuarios');
+    } finally {
+        await sql.close();
     }
 });
 
