@@ -194,7 +194,7 @@ app.post('/emprestimos', async (req, res) => {
 
         await sql.query(`UPDATE Exemplares
             SET Status = 'Emprestado'
-            WHERE ID_Exemplar = ID_Exemplar`);
+            WHERE ID_Exemplar = ${ID_Exemplar}`);
     
         res.send('Empréstimo realizado com sucesso!');
     } catch (error) {
@@ -202,23 +202,26 @@ app.post('/emprestimos', async (req, res) => {
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
     }
 });
+
 //Emprestimos
-app.get('VerEmprestimo',async (req, res) => {
+app.get('/VerEmprestimo',async (req, res) => {
     try{
       await sql.connect(dbConfig);
 
-      const resultado = await sql.query('SELECT Data_Emprestimo, Data_Devolucao, Nome_completo, FROM Emprestimos INNER JOIN Usuarios');
-      res.json(resultado.recordset);
+      const resultado = await sql.query('SELECT * FROM vw_Emprestimo_dado');
+      if (resultado.recordset.length > 0)  {
+        res.json(resultado.recordset);
+      } else {
+        res.send('Dados não encontrados');
+      }
     }
     catch (error) {
-        console.error('Erro na consulta ao banco de dados:', err);
-        res.status(500).send('erro ao visualizar Empréstimos');
+        console.error('Erro na consulta ao banco de dados: ', error);
+        res.status(500).send('Erro ao visualizar empréstimos.');
     }
     finally{
-        await sql.close
+        await sql.close;
     }
-
-
 });
 
 

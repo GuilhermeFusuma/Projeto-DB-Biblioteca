@@ -15,6 +15,7 @@ header {
     height: var(--header-size);
     display: flex;
     align-items: center;
+    z-index: 3;
 }
 header img {
     padding: 25px;
@@ -65,19 +66,36 @@ header img {
     justify-content: space-evenly;
     align-items: center;
     font-size: 12px;
+    z-index: 3;
 }
 .le a {
     text-decoration: none;
     color: white;
 }
 main {
+    position: relative;
     height: calc(100vh - var(--header-size) - var(--le-size));
-    background-color: #575757;
+    background: url(/img/livro.png);
+    background-repeat: no-repeat;
+    background-size: cover;
     padding: 30px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 1fr 8fr;
     align-items: center;
+    z-index: 0;
+}
+main::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.37);
+    z-index: 1;
+}
+main * {
+    z-index: 5;
 }
 main h2 {
     color: white;
@@ -95,20 +113,18 @@ main h2 {
     grid-column-end: 3;
     grid-row-start: 2;
 }
-#listPresenca,
+#listEmprestimo,
 #columns {
     margin: 0;
     width: 1100px;
 }
-#listPresenca {
+#listEmprestimo {
     height: fit-content;
     max-height: 700px;
     overflow-y: auto;
 }
-#listPresenca::-webkit-scrollbar {
-
-    width: 12px; /* Largura da barra de rolagem vertical */
-    height: 12px; /* Altura da barra de rolagem horizontal */
+#listEmprestimo::-webkit-scrollbar {
+    display: none;
 }
 .column {
     height: 100%;
@@ -157,4 +173,27 @@ main h2 {
 }
 #columns .column {
     background: red;
+}
+#addEmprestimo {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    text-decoration: none;
+}
+#addEmprestimo button {
+    background-color: red;
+    color: white;
+    height: 35px;
+    width: fit-content;
+    border-radius: 20px;
+    padding: 7px;
+    font-size: 18px;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#addEmprestimo button:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }

@@ -19,21 +19,18 @@
     </header>
     <div class="le">
         <a href=""><h1>Livros</h1></a>
-        <a href=""><h1>Empréstimos</h1></a>
-        <a href="/alunos/presença.html"><h1>Presença</h1></a>
+        <a href="/livros/verEmprestimo.html"><h1>Empréstimos</h1></a>
+        <a href="/alunos/verPresenca.html"><h1>Presença</h1></a>
     </div>
     <main>
-        <h2>Lista de Empréstimos</h2>
         <div id="list">
             <div id="columns" class="row" style="--list_border: white;">
                 <div class="num column"></div>
                 <div class="nome column">
                     <p>Nome do usuário</p>
-                    <i class="fa-solid fa-chevron-down" id="nomeArrow"></i>
                 </div>
                 <div class="livro column">
                     <p>nome do livro</p>
-                    <i class="fa-solid fa-chevron-down" id="EmailArrow"></i>
                 </div>
                 <div class="emprestimo column">data de empréstimo</div>
                 <div class="devoluçao column">data de devolução</div>
@@ -41,15 +38,98 @@
             <div id="listEmprestimo">
             </div>
         </div>
+        <a href="/livros/addEmprestimo.html" id="addEmprestimo"><button>
+            Marcar empréstimo
+        </button></a>
     </main>
-
     <script>
-    
+        let lista = [];
 
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:3000/VerEmprestimo');
+            
+            // Verifica se a resposta foi bem-sucedida
+            if (!response.ok) {
+                throw new Error('Falha ao obter os dados');
+            }
+            
+            // Converte a resposta para JSON
+            lista = await response.json();
 
+            montarLista(lista);
+            } catch (error) {
+                alert('Erro em conseguir Emprestimos');
+                console.error(error);
+            }
+        });
 
+        function filterData(query) {
+            return lista.filter(item =>
+                item.Nome_completo.toLowerCase().includes(query.toLowerCase())
+            );
+        }
 
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value;
+            montarLista(filterData(query));
+        });
 
+        function montarLista(obj) {
+            const lista = document.getElementById('listEmprestimo'); //tabela que será inserida os usuarios
+
+            lista.innerHTML = '';
+            
+            let counter = 0;
+            //loop para construir a tabela, usuario por usuario
+            obj.forEach(item => {
+                let numDiv = parImpar(counter);
+                let corBordas;
+                if (numDiv == 'par') {
+                    corBordas = 'white';
+                } else {
+                    corBordas = 'rgb(209, 209, 209)';
+                }
+                let user_info = document.createElement('div');
+                user_info.style = `--list_border: black; --cell_color: ${corBordas}`
+                user_info.classList.add('aluno_info');
+                user_info.classList.add('row');
+                //monta a linha com as informações de cada user
+                user_info.innerHTML = ` 
+                    <div class="num column">${counter + 1}</div>
+                    <div class="nome column">${item.Nome_completo}</div>
+                    <div class="livro column">${item.Titulo_Livro}</div>
+                    <div class="emprestimo column">${item.Data_Emprestimo}</div>
+                    <div class="devoluçao column">${item.Data_Devolucao}</div>
+                    <div class="status column">${}
+                    `;
+                //adiciona a linha à lista
+                lista.appendChild(user_info);
+
+                ++counter
+            });
+        }
+
+        function checarStatus(obj) {
+            const dataAtual = new Date(); // Data atual
+            const valorData = new Date(obj.Data_Devolucao);
+
+            if (valorData >= dataAtual) {
+                return 'Dentro do prazo';
+            } else if (valorData < dataAtual) {
+                return 'Devolução atrazada'
+            }
+        }
+
+        function parImpar(num) {
+            const valor = num % 2;
+            if(valor === 0) {
+                return 'par';
+            } else {
+                return 'impar';
+            }
+        }
     </script>
 </body>
 </html>

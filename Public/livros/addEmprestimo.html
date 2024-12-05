@@ -60,6 +60,9 @@
                 });
                 const message = await response.text();
                 alert(message);
+                if (!message.includes('Não foi encontrado') || !message.includes('Erro')) {
+                    window.location.href = '/livros/verEmprestimo.html'
+                }
             } catch (error) {
                 alert('Erro ao enviar dados: ' + error.message);
             }
