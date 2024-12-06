@@ -144,17 +144,23 @@
             }
         }
 
-        function atualizarStatus() {
-            
+        async function atualizarStatus(id) {
+            if (!id || typeof id !== 'number') {
+            alert('ID inválido para atualização de status.');
+            return;
+            }
 
             try {
-                fetch('/atualizarStatus', {
+                const response = await fetch('/atualizarStatus', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({})
-                })
+                    body: JSON.stringify({id})
+                });
+
+                const message = await response.text();
+                alert(message);
             } catch (error) {
-                alert('Erro em atualizar o status: ', error);
+                alert('Erro em atualizar o status: ' + error.message);
             }
         }
 
@@ -172,7 +178,7 @@
                         <p><strong>Status:</strong> ${item.Status}</p>
                         <div class="botoes">
                             <button onclick="fecharPopup()">Fechar</button>
-                            <button onclick="atualizarStatus()">Livro devolvido</button>    
+                            <button onclick="atualizarStatus(${item.ID_Emprestimo})">Livro devolvido</button>    
                         </div>
                     </div>
                 </div>

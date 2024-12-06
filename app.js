@@ -238,7 +238,32 @@ app.get('/VerEmprestimo', async (req, res) => {
 
 // Endpoint que atualizar o status do emprestimo
 app.post('/atualizarStatus', async (req, res) => {
-    
+    const { id } = req.body;
+
+    try {
+        // Conecta ao banco de dados
+        await sql.connect(dbConfig);
+
+        // Executa a consulta de atualização
+        const query = `
+            UPDATE Emprestimos
+            SET Status = 'Devolvido'
+            WHERE ID_Emprestimo = @id
+        `;
+        const request = new sql.Request();
+        request.input('id', sql.Int, id);
+        const result = await request.query(query);
+
+        // Verifica se alguma linha foi afetada
+        if (result.rowsAffected[0] > 0) {
+            res.status(200).send('Status atualizado com sucesso.');
+        } else {
+            res.status(404).send('Empréstimo não encontrado.');
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar empréstimo:', error);
+        res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
+    }
 });
 
 // Endpoint para procurar titulos
