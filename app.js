@@ -135,7 +135,6 @@ app.post('/emprestimos', async (req, res) => {
 
     // Validação dos parâmetros
     if (!ID_Titulo || !Email || !Data_Devolucao) {
-        console.log( ID_Titulo, Email, Data_Devolucao);
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
    
@@ -160,7 +159,6 @@ app.post('/emprestimos', async (req, res) => {
     
         // Verifica se não há exemplares encontrados
         if (exemplaresList.length == 0) {
-            console.log(exemplaresList);
             return res.status(404).send('Não foi encontrado exemplares disponíveis para este livro.');
         }
 
@@ -204,23 +202,37 @@ app.post('/emprestimos', async (req, res) => {
 });
 
 //Emprestimos
-app.get('/VerEmprestimo',async (req, res) => {
-    try{
-      await sql.connect(dbConfig);
+app.get('/VerEmprestimo', async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
 
-      const resultado = await sql.query('SELECT * FROM vw_Emprestimo_dado');
-      if (resultado.recordset.length > 0)  {
-        res.json(resultado.recordset);
-      } else {
-        res.send('Dados não encontrados');
-      }
-    }
-    catch (error) {
+        const resultado = await sql.query('SELECT * FROM vw_Emprestimo_dado');
+        const lista = resultado.recordset;
+
+        const dataAtual = new Date();
+
+        for (let i = 0; i < lista.length; i++) {
+            // Converte para objeto Date caso necessário
+            const dataDevolucao = new Date(lista[i].Data_Devolucao);
+            if (dataDevolucao < dataAtual) {
+                const updateQuery = "UPDATE Emprestimos SET Status = 'Atrasado' WHERE ID_Emprestimo = @ID";
+
+                const updateRequest = new sql.Request();
+                updateRequest.input('ID', sql.Int, lista[i].ID_Emprestimo);
+                await updateRequest.query(updateQuery);
+            }
+        }
+
+        if (lista.length > 0) {
+            res.json(lista);
+        } else {
+            res.send('Dados não encontrados');
+        }
+    } catch (error) {
         console.error('Erro na consulta ao banco de dados: ', error);
         res.status(500).send('Erro ao visualizar empréstimos.');
-    }
-    finally{
-        await sql.close;
+    } finally {
+        await sql.close();
     }
 });
 
@@ -272,7 +284,6 @@ app.post('/presenca', async (req, res) => {
     const { Email } = req.body;
 
     if (!Email || typeof Email !== 'string' || Email.trim() === '') {
-        console.log(Email);
         return res.status(400).send('Email inválido ou não fornecido.');
     }
 
@@ -324,7 +335,6 @@ app.get('/mostrarLivros', async (req, res) => {
         const result = await sql.query(query);
 
         res.json(result.recordset);  // Envie a resposta no formato JSON
-        console.log(result.recordset);
     } catch (error) {
         console.error('Erro ao conseguir livros: ', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');

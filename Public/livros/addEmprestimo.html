@@ -13,7 +13,7 @@
     </header>
     <div class="le">
         <a href="http://localhost:3000/livros/"><h1>Livros</h1></a>
-        <a href=""><h1>Empréstimos</h1></a>
+        <a href="/livros/verEmprestimo.html"><h1>Empréstimos</h1></a>
         <a href="http://localhost:3000/alunos/verPresenca.html"><h1>Presença</h1></a>
     </div>
     <main>
@@ -60,7 +60,7 @@
                 });
                 const message = await response.text();
                 alert(message);
-                if (!message.includes('Não foi encontrado') || !message.includes('Erro')) {
+                if (message.includes('Empréstimo realizado com sucesso')) {
                     window.location.href = '/livros/verEmprestimo.html'
                 }
             } catch (error) {

@@ -34,6 +34,7 @@
                 </div>
                 <div class="emprestimo column">data de empréstimo</div>
                 <div class="devoluçao column">data de devolução</div>
+                <div class="status column">Status</div>
             </div>
             <div id="listEmprestimo">
             </div>
@@ -76,6 +77,14 @@
             montarLista(filterData(query));
         });
 
+        function formatarData(data) {
+            const date = new Date(data);
+            const dia = date.getDate().toString().padStart(2, '0'); // Adiciona zero se for necessário
+            const mes = (date.getMonth() + 1).toString().padStart(2, '0'); // Meses são baseados em 0
+            const ano = date.getFullYear();
+            return `${dia}/${mes}/${ano}`;
+        }
+
         function montarLista(obj) {
             const lista = document.getElementById('listEmprestimo'); //tabela que será inserida os usuarios
 
@@ -91,22 +100,23 @@
                 } else {
                     corBordas = 'rgb(209, 209, 209)';
                 }
+
                 let user_info = document.createElement('div');
                 user_info.style = `--list_border: black; --cell_color: ${corBordas}`
                 user_info.classList.add('aluno_info');
                 user_info.classList.add('row');
-                //monta a linha com as informações de cada user
+                //monta a linha com as informações de cada empréstimo
                 user_info.innerHTML = ` 
                     <div class="num column">${counter + 1}</div>
                     <div class="nome column">${item.Nome_completo}</div>
                     <div class="livro column">${item.Titulo_Livro}</div>
                     <div class="emprestimo column">${item.Data_Emprestimo}</div>
-                    <div class="devoluçao column">${item.Data_Devolucao}</div>
-                    <div class="status column">${}
+                    <div class="devoluçao column">${formatarData(item.Data_Devolucao)}</div>
+                    <div class="status column">${item.Status}
                     `;
                 //adiciona a linha à lista
                 lista.appendChild(user_info);
-
+                
                 ++counter
             });
         }
