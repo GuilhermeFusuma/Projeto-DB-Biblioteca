@@ -201,7 +201,7 @@ app.post('/emprestimos', async (req, res) => {
     }
 });
 
-//Emprestimos
+//Ver emprestimos
 app.get('/VerEmprestimo', async (req, res) => {
     try {
         await sql.connect(dbConfig);
@@ -236,7 +236,10 @@ app.get('/VerEmprestimo', async (req, res) => {
     }
 });
 
-
+// Endpoint que atualizar o status do emprestimo
+app.post('/atualizarStatus', async (req, res) => {
+    
+});
 
 // Endpoint para procurar titulos
 app.get('/titulosGet', async (req, res) => {
@@ -347,6 +350,7 @@ app.get('/mostrarLivros', async (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
 
 // Exemplo de requisição para Google Books API
 // const fetchISBN = async (titulo) => {

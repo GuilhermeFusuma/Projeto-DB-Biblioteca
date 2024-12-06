@@ -112,7 +112,10 @@
                     <div class="livro column">${item.Titulo_Livro}</div>
                     <div class="emprestimo column">${item.Data_Emprestimo}</div>
                     <div class="devoluçao column">${formatarData(item.Data_Devolucao)}</div>
-                    <div class="status column">${item.Status}
+                    <div class="status column">
+                        <p>${item.Status}</p>
+                        <button class="acoes" onclick="mostrarPopup(${counter})">Ações</button>    
+                    </div>
                     `;
                 //adiciona a linha à lista
                 lista.appendChild(user_info);
@@ -138,6 +141,50 @@
                 return 'par';
             } else {
                 return 'impar';
+            }
+        }
+
+        function atualizarStatus() {
+            
+
+            try {
+                fetch('/atualizarStatus', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({})
+                })
+            } catch (error) {
+                alert('Erro em atualizar o status: ', error);
+            }
+        }
+
+        //Cria o popup ao clicar no botão ações
+        function mostrarPopup(index) {
+            const item = lista[index]; // Acessa os dados do item com base no índice
+            const popupContent = `
+                <div class="popup-overlay">
+                    <div class="popup">
+                        <h2>Livro devolvido?</h2>
+                        <h3>Detalhes</h3>
+                        <p><strong>Nome:</strong> ${item.Nome_completo}</p>
+                        <p><strong>Livro:</strong> ${item.Titulo_Livro}</p>
+                        <p><strong>Data de Devolução:</strong> ${formatarData(item.Data_Devolucao)}</p>
+                        <p><strong>Status:</strong> ${item.Status}</p>
+                        <div class="botoes">
+                            <button onclick="fecharPopup()">Fechar</button>
+                            <button onclick="atualizarStatus()">Livro devolvido</button>    
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', popupContent);
+        }
+
+        function fecharPopup() {
+            const popup = document.querySelector('.popup-overlay');
+            if (popup) {
+                popup.remove();
             }
         }
     </script>
