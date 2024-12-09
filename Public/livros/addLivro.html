@@ -11,19 +11,21 @@
         <img src="senai.png" alt="">
     </header>
     <div class="le">
-        <a href="http://localhost:3000/livros/verEmprestimo.html"><h1>Livros</h1></a>
+        <a href="http://localhost:3000/livros/verLivros.html"><h1>Livros</h1></a>
         <a href="http://localhost:3000/livros/verEmprestimo.html"><h1>Empréstimos</h1></a>
         <a href="http://localhost:3000/alunos/verPresenca.html"><h1>Presença</h1></a>
     </div>
     <main>
         <form id="livroForm">
             <h1>Adicionar Livro</h1>
-            <br><br>
+            <br>
+            <p><strong>*</strong> indica um campo obrigatório.</p>
+            <br>
             <div id="formGrid">
-                <input type="text" placeholder="Título" id="titulo" required><br><br>
-                <input type="text" placeholder="Autor" id="autor" required><br><br>
-                <input type="text" placeholder="Volume" id="volume" required><br><br>
-                <input type="text" placeholder="Edição" id="edicao" required><br><br>
+                <input type="text" placeholder="Título *" id="titulo" required><br><br>
+                <input type="text" placeholder="Autor * Ex: ASSIS. Machado de" id="autor" required><br><br>
+                <input type="text" placeholder="Volume *   Ex: V2" id="volume" required><br><br>
+                <input type="text" placeholder="Edição *   Ex: Ed4" id="edicao" required><br><br>
                 <select name="" id="categorias">
                     <option value="">Selecione a Categoria</option>
                     <option value="1">Ficção Científica</option>
@@ -43,7 +45,7 @@
                     <option value="15">Religião</option>
                     <option value="16">Esportes</option>
                 </select>
-                <input type="text" id="Assunto" list="sugestoes" placeholder="Assunto">
+                <input type="text" id="Assunto" list="sugestoes" placeholder="Assunto *">
                 <datalist id="sugestoes"></datalist>
                 <button type="submit">Registrar livro</button>
             </div>

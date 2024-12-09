@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="verLivros.css">
+</head>
+<body>
+    <header>
+        <img src="senai.png" alt="">
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por livros">
+            <button type="button" class="search-button">
+                <i class="fa fa-search"></i> <!-- Usando FontAwesome para o ícone da lupa -->
+            </button>
+        </div>
+    </header>
+    <div class="le">
+        <a href="http://localhost:3000/livros/emprestimo.html"><h1>Livros</h1></a>
+        <a href="http://localhost:3000/livros/verEmprestimo.html"><h1>Empréstimos</h1></a>
+        <a href="/alunos/verPresenca.html"><h1>Presença</h1></a>
+    </div>
+    <main>
+        <h1>Nossos livros:</h1>
+        <div id="list">
+            <div id="listHead">
+                <h2>Titulo</h2>
+                <h2>Autor</h2>
+                <h2>Status</h2>
+            </div>
+            <div id="livrosList"></div>
+        </div>
+        <button id="addLivrosBtn" onclick="addLivro()">Adicionar Livros <strong>+</strong></button>
+    </main>
+    <script>
+        let lista = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:3000/mostrarLivros');
+
+                if (!response.ok) {
+                    throw new Error('Falha ao obter os dados');
+                }
+
+                lista = await response.json();
+                montarLista(lista);
+            } catch (error) {
+                alert('Erro em conseguir livros: ' + error.message)
+            }
+        });
+
+        function montarLista(arr) { //função que monta a lista na página
+            const lista = document.getElementById('livrosList');
+
+            lista.innerHTML = '';
+
+            arr.forEach(livro => {
+                const linha = document.createElement('div');
+                linha.classList.add('linha');
+                linha.innerHTML =`
+                <div class="titulo">${livro.Titulo_Livro}</div>
+                    <div class="autor">${livro.Autor}</div>
+                    <div class="status">${disponivel(livro.qtd_Disponiveis)}</div>
+                    <button class="emprestimoBtn">Detalhes</button>
+                `;
+                lista.appendChild(linha);
+            });
+
+        }
+
+        function disponivel(obj) {
+            if (obj) {
+                return 'disponível';
+            } else {
+                return 'indisponível';
+            }
+        }
+
+        function addLivro() {
+            window.location.href = 'http://localhost:3000/livros/addLivro.html';
+        }
+    </script>
+</body>
+</html>

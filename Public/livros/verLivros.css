@@ -1,0 +1,198 @@
+*{
+    margin: 0 auto;
+    padding: 0 auto;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    box-sizing: border-box;
+}
+:root {
+    --header-size: 60px;
+    --list-height: 65vh;
+}
+header {
+    background: rgb(32,32,32);
+    background: linear-gradient(90deg, rgba(32,32,32,1) 0%, rgba(168,168,168,1) 100%);
+    width: 100%;
+    height: var(--header-size);
+    padding-inline: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+header img {
+    margin: 0;
+}
+.search-container {
+    margin: 0;
+    position: relative;
+    width: 400px; /* Ou um tamanho fixo, se preferir */
+    min-width: 100px;
+}
+/* Estilizando o campo de pesquisa */
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 10px; /* Espaço à direita para a lupa */
+    border: 1px solid #ccc;
+    outline: none;
+    border-radius: 20px;
+    font-size: 16px;
+}
+.search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+/* Icone da lupa */
+.search-button i {
+    font-size: 18px;
+    color: #888;
+}
+.search-button:active i {
+    color: #555555
+}
+.le {
+    width: 100%;
+    background-color: #FF2727;
+    height: var(--header-size);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 12px;
+}
+.le a {
+    color: white;
+}
+main {
+    position: relative;
+    height: calc(100vh - 2 * var(--header-size));
+    background: url('/img/senaiBackground.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+main::after {
+    content: '';
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.281);
+    z-index: 1;
+}
+main h1 {
+    position: absolute;
+    left: 3%;
+    top: 5%;
+    z-index: 2;
+    color: white;
+    text-shadow: 1px 1px 7px black;
+}
+#list {
+    position: relative;
+    min-width: 500px;
+    width: 70%;
+    min-height: 450px;
+    height: var(--list-height);
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    background: rgb(219, 219, 219);
+    z-index: 3;
+}
+#list::after,
+#list::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: calc(var(--list-height) - 25%);
+    background: linear-gradient(
+        -45deg,
+        rgba(0, 0, 0, 0.63),
+        rgba(32, 1, 1, 0.644) 
+    );
+    top: 17%;
+}
+#list::after {
+    left: 30%;
+}
+#list::before {
+    right: 42%;
+}
+#listHead {
+    position: relative;
+    width: 90%;
+    margin-block: 10px;
+    height: 60px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(3, 2fr) 1fr;
+    justify-items: center;
+    align-items: center;
+    background-color: #FF2727;
+    text-shadow: 1px 1px 7px black;
+    color: white;
+}
+#listHead::after {
+    --blur-size: 5px;
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: var(--blur-size);
+    box-shadow: 0 2px var(--blur-size) black;
+    transform: translateY(calc(-1 * var(--blur-size)));
+}
+#livrosList {
+    width: 90%;
+    padding-top: 3%;
+}
+.linha {
+    display: flex;
+    display: grid;
+    padding: 8px;
+    grid-template-columns: repeat(3, 2fr) 1fr;
+    justify-items: center;
+    align-items: center;
+    border-bottom: 2px solid gray;
+    margin-bottom: 2%;
+}
+.linha button {
+    background-color: red;
+    color: white;
+    height: 35px;
+    border-radius: 20px;
+    padding: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#addLivrosBtn {
+    position: absolute;
+    right: 5%;
+    bottom: 3%;
+    background-color: red;
+    color: white;
+    height: 35px;
+    width: fit-content;
+    border-radius: 20px;
+    padding: 7px;
+    font-size: 18px;
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+#addLivrosBtn:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}

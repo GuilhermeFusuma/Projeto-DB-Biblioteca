@@ -143,3 +143,18 @@ BEGIN
 	VALUES (1, @ID_Titulo, 'Disponível')
 END
 
+CREATE OR ALTER VIEW VW_LivrosDados AS
+SELECT 
+T.ID_Titulo,
+Titulo_Livro,
+Autor,
+Volume,
+Edicao,
+Data_Registro,
+Assunto_id,
+COUNT(CASE WHEN E.Status = 'Disponível' THEN 1 END) OVER (PARTITION BY T.ID_Titulo) AS qtd_Disponiveis
+FROM Titulos T
+INNER JOIN Exemplares E ON E.ID_Titulo = T.ID_Titulo
+
+
+SELECT * FROM VW_LivrosDados

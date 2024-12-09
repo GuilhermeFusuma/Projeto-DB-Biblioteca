@@ -201,7 +201,7 @@ app.post('/emprestimos', async (req, res) => {
     }
 });
 
-//Ver emprestimos
+//Endpoint para mostrar todos os empréstimos
 app.get('/VerEmprestimo', async (req, res) => {
     try {
         await sql.connect(dbConfig);
@@ -241,10 +241,8 @@ app.post('/atualizarStatus', async (req, res) => {
     const { id } = req.body;
 
     try {
-        // Conecta ao banco de dados
         await sql.connect(dbConfig);
 
-        // Executa a consulta de atualização
         const query = `
             UPDATE Emprestimos
             SET Status = 'Devolvido'
@@ -254,7 +252,7 @@ app.post('/atualizarStatus', async (req, res) => {
         request.input('id', sql.Int, id);
         const result = await request.query(query);
 
-        // Verifica se alguma linha foi afetada
+        // Verifica se alguma linha foi afetada na consulta
         if (result.rowsAffected[0] > 0) {
             res.status(200).send('Status atualizado com sucesso.');
         } else {
@@ -359,10 +357,11 @@ app.get('/mostrarLivros', async (req, res) => {
     try {
         await sql.connect(dbConfig);
 
-        const query = 'SELECT * FROM Titulos';
+        const query = 'SELECT * FROM VW_LivrosDados';
         const result = await sql.query(query);
 
         res.json(result.recordset);  // Envie a resposta no formato JSON
+        console.log(result.recordset);
     } catch (error) {
         console.error('Erro ao conseguir livros: ', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
