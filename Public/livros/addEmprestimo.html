@@ -43,6 +43,8 @@
     </main>
 
     <script>
+        const emprestimoTemp = JSON.parse(localStorage.getItem("emprestimoTemp"));
+
         document.getElementById('livroForm').addEventListener('submit', async (event) => {  // função que roda sempre que o form for enviado
             event.preventDefault(); // evita que a página seja reiniciada
 
@@ -87,6 +89,9 @@
             } catch (error) {
                 alert('Erro em conseguir os titulos: ' + error.message);
             }
+
+            // Adiciona dados na página caso o cache local possua informações
+            if (emprestimoTemp);
         });
 
         // Parte do input para selecionar o livro
@@ -109,6 +114,11 @@
                 const text = option.textContent.toLowerCase();
                 option.style.display = text.includes(filter) ? '' : 'none';
             }
+        });
+
+        //limpa o cache local
+        window.addEventListener('unload', () => {
+            localStorage.setItem("emprestimoTemp", JSON.stringify({}));
         });
     </script>
 </body>

@@ -6,6 +6,7 @@
     <title>Document</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="verLivros.css">
+
 </head>
 <body>
     <header>
@@ -18,7 +19,7 @@
         </div>
     </header>
     <div class="le">
-        <a href="http://localhost:3000/livros/emprestimo.html"><h1>Livros</h1></a>
+        <a href=""><h1>Livros</h1></a>
         <a href="http://localhost:3000/livros/verEmprestimo.html"><h1>Empréstimos</h1></a>
         <a href="/alunos/verPresenca.html"><h1>Presença</h1></a>
     </div>
@@ -34,6 +35,18 @@
         </div>
         <button id="addLivrosBtn" onclick="addLivro()">Adicionar Livros <strong>+</strong></button>
     </main>
+    <!-- Popup -->
+    <div class="overlay"></div>
+    <div class="popup">
+        <span id="popup-content">
+            <span id="popupTitulo">
+                <p>Titulo:</p>
+                <p></p>
+            </span>
+            <span id="popupAutor"></span>
+        </span>
+        <button id="close-popup">Fechar</button>
+    </div>
     <script>
         let lista = [];
 
@@ -50,6 +63,38 @@
             } catch (error) {
                 alert('Erro em conseguir livros: ' + error.message)
             }
+
+            //Cria as interações necessárias para os popups
+            const buttons = document.querySelectorAll('button[data-target]');
+            const popup = document.querySelector('.popup');
+            const overlay = document.querySelector('.overlay');
+            const popupContent = document.getElementById('popup-content');
+            const closePopup = document.getElementById('close-popup');
+
+            // Mostrar o popup ao clicar no botão
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const targetDiv = document.getElementById(targetId);
+
+                    if (targetDiv) {
+                        
+                        popup.classList.add('visible');
+                        overlay.classList.add('visible');
+                    }
+                });
+            });
+            // Fechar o popup
+            closePopup.addEventListener('click', () => {
+                popup.classList.remove('visible');
+                overlay.classList.remove('visible');
+            });
+
+            // Fechar ao clicar na overlay
+            overlay.addEventListener('click', () => {
+                popup.classList.remove('visible');
+                overlay.classList.remove('visible');
+            });
         });
 
         function montarLista(arr) { //função que monta a lista na página
@@ -60,15 +105,15 @@
             arr.forEach(livro => {
                 const linha = document.createElement('div');
                 linha.classList.add('linha');
+                linha.id = `livro-${livro.ID_Titulo}`;
                 linha.innerHTML =`
                 <div class="titulo">${livro.Titulo_Livro}</div>
                     <div class="autor">${livro.Autor}</div>
                     <div class="status">${disponivel(livro.qtd_Disponiveis)}</div>
-                    <button class="emprestimoBtn">Detalhes</button>
+                    <button class="emprestimoBtn" data-target="livro-${livro.ID_Titulo}">Detalhes</button>
                 `;
                 lista.appendChild(linha);
             });
-
         }
 
         function disponivel(obj) {
