@@ -39,11 +39,26 @@
     <div class="overlay"></div>
     <div class="popup">
         <span id="popup-content">
-            <span id="popupTitulo">
+            <span id="popupTitulo" class="popupInfo">
                 <p>Titulo:</p>
-                <p></p>
+                <p id="infoTitulo"></p>
             </span>
-            <span id="popupAutor"></span>
+            <span id="popupAutor" class="popupInfo">
+                <p>Autor:</p>
+                <p id="infoAutor"></p>
+            </span>
+            <span id="popupAssunto" class="popupInfo">
+                <p>Assunto:</p>
+                <p id="infoAssunto"></p>
+            </span>
+            <span id="popupEdicao" class="popupInfo">
+                <p>Edição:</p>
+                <p id="infoEdicao"></p>
+            </span>
+            <span id="popupVolume" class="popupInfo">
+                <p>Volume:</p>
+                <p id="infoVolume"></p>
+            </span>
         </span>
         <button id="close-popup">Fechar</button>
     </div>
@@ -76,9 +91,19 @@
                 button.addEventListener('click', () => {
                     const targetId = button.getAttribute('data-target');
                     const targetDiv = document.getElementById(targetId);
+                    const tituloId = targetId.replace('livro-', '');
 
                     if (targetDiv) {
-                        
+                        // Consegue o index do livro na lista
+                        const listaIndex = index(tituloId);
+
+                        // insere as informações
+                        document.getElementById('infoAutor').innerText = lista[listaIndex].Autor;
+                        document.getElementById('infoTitulo').innerText = lista[listaIndex].Titulo_Livro;
+                        document.getElementById('infoEdicao').innerText = lista[listaIndex].Edicao;
+                        document.getElementById('infoVolume').innerText = lista[listaIndex].Volume;
+                        document.getElementById('infoAssunto').innerText = lista[listaIndex].Assunto;
+
                         popup.classList.add('visible');
                         overlay.classList.add('visible');
                     }
@@ -97,6 +122,14 @@
             });
         });
 
+        function index(id) {
+            for (let i = 0; i < lista.length; i++) {
+                if (lista[i].ID_Titulo == id) {
+                    return i;
+                }
+            }
+        }
+
         function montarLista(arr) { //função que monta a lista na página
             const lista = document.getElementById('livrosList');
 
@@ -106,7 +139,7 @@
                 const linha = document.createElement('div');
                 linha.classList.add('linha');
                 linha.id = `livro-${livro.ID_Titulo}`;
-                linha.innerHTML =`
+                linha.innerHTML =` 
                 <div class="titulo">${livro.Titulo_Livro}</div>
                     <div class="autor">${livro.Autor}</div>
                     <div class="status">${disponivel(livro.qtd_Disponiveis)}</div>

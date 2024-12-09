@@ -361,7 +361,6 @@ app.get('/mostrarLivros', async (req, res) => {
         const result = await sql.query(query);
 
         res.json(result.recordset);  // Envie a resposta no formato JSON
-        console.log(result.recordset);
     } catch (error) {
         console.error('Erro ao conseguir livros: ', error);
         res.status(500).send('Erro interno no servidor. Tente novamente mais tarde.');
