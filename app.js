@@ -286,14 +286,14 @@ app.post('/cadastro', async (req, res) => {
     if (!Nome_Completo || !ID_Tipo || !Email) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
-
+    console.log(typeof(Nome_Completo) + typeof(ID_Tipo) + typeof(Email));
     try {
         const query = "EXEC ADD_Usuario @Email, @Nome_Completo, @ID_Tipo";
         await sql.connect(dbConfig);
         const request = new sql.Request();
+        request.input('Email', sql.VarChar(100), Email);
         request.input('Nome_Completo', sql.VarChar(100), Nome_Completo);
         request.input('ID_Tipo', sql.Int, ID_Tipo);
-        request.input('Email', sql.VarChar(100), Email);
         await request.query(query);
 
         res.send('Usuário cadastrado com sucesso!');
