@@ -175,8 +175,7 @@ main h1 {
 }
 
 
-#addLivrosBtn,
-.popup button {
+#addLivrosBtn {
     position: absolute;
     right: 5%;
     bottom: 3%;
@@ -193,9 +192,7 @@ main h1 {
     justify-content: center;
     z-index: 5;
 }
-#addLivrosBtn:hover,
-.popup button:hover,
-.linha button {
+#addLivrosBtn:hover {
     transform: scale(1.1);
     cursor: pointer;
 }
@@ -207,14 +204,10 @@ main h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    min-width: 30%;
-    min-height: 30%;
-    border-radius: 20px;
-    background: rgb(219, 219, 219);
+    background: #fff;
     padding: 20px;
-    box-shadow: 1px 1px 10px rgba(31, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    padding-bottom: 50px;
 }
 
 .overlay {
@@ -237,7 +230,6 @@ main h1 {
     padding: 10px;
     background: #f4f4f4;
 }
-
 .popupInfo {
     display: flex;
     gap: 4px;
@@ -256,7 +248,4 @@ main h1 {
     margin: 0;
     color: #FF2727;
     font-weight: bold;
-}
-.popupInfo p:nth-child(2) {
-
 }

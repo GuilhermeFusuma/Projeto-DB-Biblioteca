@@ -137,7 +137,7 @@ app.post('/emprestimos', async (req, res) => {
     if (!ID_Titulo || !Email || !Data_Devolucao) {
         return res.status(400).send('Todos os campos são obrigatórios.');
     }
-   
+    console.log("ID_Titulo recebido:", ID_Titulo);
     try {
         await sql.connect(dbConfig);
 
@@ -162,22 +162,14 @@ app.post('/emprestimos', async (req, res) => {
             return res.status(404).send('Não foi encontrado exemplares disponíveis para este livro.');
         }
 
-        let exemplarEncontrado = false;
-        let ID_Exemplar;
+        // Log para garantir a existência de exemplares
+        exemplaresList.forEach(exemplar => console.log("Exemplar:", exemplar));
     
-        for (let i = 0; i < exemplaresList.length; i++) {
-            let exemplar = exemplaresList[i];
-            if (exemplar.status === 'disponível') { // Verifica se o status é 'disponível'
-                ID_Exemplar = exemplar.ID_Exemplar;
-                exemplarEncontrado = true;
-                break; // Sai do loop assim que encontrar o exemplar disponível
-            }
-        }
-    
-        // Se nenhum exemplar disponível for encontrado
-        if (!exemplarEncontrado) {
+        const exemplarDisponivel = exemplaresList.find(exemplar => exemplar.status === 'Disponível' || exemplar.status === 'disponível');
+        if (!exemplarDisponivel) {     // Se nenhum exemplar disponível for encontrado
             return res.status(404).send('Nenhum exemplar disponível encontrado.');
         }
+        const { ID_Exemplar } = exemplarDisponivel;
     
         // Inserir o Empréstimo
         const query = `
@@ -238,7 +230,7 @@ app.get('/VerEmprestimo', async (req, res) => {
 
 // Endpoint que atualizar o status do emprestimo
 app.post('/atualizarStatus', async (req, res) => {
-    const { id } = req.body;
+    const { emprestimoId, exemplarId } = req.body;
 
     try {
         await sql.connect(dbConfig);
@@ -248,15 +240,24 @@ app.post('/atualizarStatus', async (req, res) => {
             SET Status = 'Devolvido'
             WHERE ID_Emprestimo = @id
         `;
-        const request = new sql.Request();
-        request.input('id', sql.Int, id);
-        const result = await request.query(query);
+        const emprestimoRequest = new sql.Request();
+        emprestimoRequest.input('id', sql.Int, emprestimoId);
+        const resultEmprestimo = await emprestimoRequest.query(query);
+
+        const attExemplarQuery = `
+        UPDATE Exemplares
+        SET Status = 'disponível'
+        WHERE ID_Exemplar = @exemplarId
+        `;
+        const exemplarRequest = new sql.Request();
+        exemplarRequest.input('exemplarId', sql.Int, exemplarId);
+        const resultExemplar = await exemplarRequest.query(attExemplarQuery);
 
         // Verifica se alguma linha foi afetada na consulta
-        if (result.rowsAffected[0] > 0) {
+        if (resultEmprestimo.rowsAffected[0] > 0 & resultExemplar.rowsAffected[0] > 0) {
             res.status(200).send('Status atualizado com sucesso.');
         } else {
-            res.status(404).send('Empréstimo não encontrado.');
+            res.status(404).send('Empréstimo ou exemplar não encontrado.');
         }
     } catch (error) {
         console.error('Erro ao atualizar empréstimo:', error);

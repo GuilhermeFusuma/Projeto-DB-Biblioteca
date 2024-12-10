@@ -46,13 +46,7 @@ BEGIN
     DROP PROCEDURE dbo.ADD_Alunos;
 END
 
-CREATE OR ALTER PROCEDURE ADD_Usuario
-@Email VARCHAR(100),
-@Nome_Completo VARCHAR(100),
-@ID_Tipo INT
-AS
-	INSERT INTO Alunos(Email, Nome_Completo, ID_Tipo)
-	VALUES (@Email, @Nome_Completo, @ID_Tipo)
+
 
 SELECT *
 FROM Usuarios

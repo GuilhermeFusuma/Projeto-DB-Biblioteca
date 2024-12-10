@@ -40,12 +40,12 @@ CREATE TABLE Cursos(
 )
 GO
 
-CREATE TABLE Alunos(
+CREATE TABLE Usuarios(
 	Email VARCHAR PRIMARY KEY,
 	Nome_Completo VARCHAR(256),
-	ID_Curso INT,
+	ID_Tipo INT,
 	qtd_Emprestimos INT
-	FOREIGN KEY (ID_Curso) REFERENCES Cursos(ID_Curso)
+	FOREIGN KEY (ID_Tipo) REFERENCES Tipo_Usuarios(ID_Tipo)
 )
 GO
 
@@ -83,9 +83,9 @@ CREATE TABLE Titulos(
 	Autor VARCHAR(100),
 	Volume VARCHAR,
 	Edicao VARCHAR,
-	ID_SubCategoria INT,
+	ID_Assunto INT,
 	Data_Registro DATETIME DEFAULT GETDATE()
-	FOREIGN KEY (ID_SubCategoria) REFERENCES SubCategorias(ID_SubCategoria)
+	FOREIGN KEY (ID_Assunto) REFERENCES Assuntos(ID)
 )
 GO
 
@@ -106,17 +106,17 @@ CREATE TABLE Emprestimos(
 	Data_Devolucao DATE,
 	Status VARCHAR(100)
 	FOREIGN KEY (ID_Exemplar) REFERENCES Exemplares(ID_Exemplar),
-	FOREIGN KEY (Email) REFERENCES Alunos(Email)
+	FOREIGN KEY (Email) REFERENCES Usuarios(Email)
 )
 GO
 
 CREATE TABLE Presencas(
 	ID_Presenca INT IDENTITY(1, 1) PRIMARY KEY,
-	ID_Curso INT NOT NULL,
+	ID_Tipo INT NOT NULL,
 	Email VARCHAR NOT NULL,
 	Data_Presenca DATETIME DEFAULT GETDATE()
-	FOREIGN KEY (Email) REFERENCES Alunos(Email),
-	FOREIGN KEY (ID_Curso) REFERENCES Cursos(ID_Curso)
+	FOREIGN KEY (Email) REFERENCES Usuarios(Email),
+	FOREIGN KEY (ID_Tipo) REFERENCES Tipo_Usuarios(ID_Tipo)
 )
 GO
 
