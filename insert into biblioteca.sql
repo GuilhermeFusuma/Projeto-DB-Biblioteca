@@ -6,9 +6,16 @@ ALTER COLUMN Email VARCHAR(100);
 INSERT INTO Tipo_Usuarios(Nome)
 VALUES
 	--('Devt'),
-	('Logistica'),
-	('Docente'),
-	('')
+	('Curso técnico de Logistica'),
+	('Docentes'),
+	('Assistente administrativo'),
+	('Curso de operador de processos logísticos'),
+	('Mecânico de usinagem'),
+	('Cliente externo'),
+	('Ex-alunos'),
+	('Formação inicial e continuada'),
+	('Funcionários'),
+	('Outros')
 
 INSERT INTO GeneroCategoria (Tipo, Nome)
 VALUES
@@ -116,3 +123,4 @@ FROM Tipo_Usuarios
 SELECT * FROM VW_UsuariosPresenca
 
 SELECT * FROM VW_LivrosDados
+
