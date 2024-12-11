@@ -103,6 +103,7 @@ main h1 {
     flex-flow: column;
     align-items: center;
     background: rgb(219, 219, 219);
+    box-shadow: -2px 2px 4px black;
     z-index: 3;
 }
 #list::after,

@@ -73,13 +73,28 @@ header img {
     color: white;
 }
 main {
+    position: relative;
     height: calc(100vh - var(--header-size) - var(--le-size));
-    background-color: #575757;
+    background: url('/img/bilioteca.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
     padding: 30px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 1fr 8fr;
     align-items: center;
+}
+main * {
+    z-index: 3;
+}
+main::after {
+    content: '';
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.486);
+    z-index: 1;
 }
 main h2 {
     color: white;
@@ -96,6 +111,7 @@ main h2 {
     grid-column-start: 1;
     grid-column-end: 3;
     grid-row-start: 2;
+    box-shadow: -2px 2px 4px black;
 }
 #listPresenca,
 #columns {
